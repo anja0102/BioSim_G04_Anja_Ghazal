@@ -3,5 +3,5 @@
 
 ## Authors
 
-- Anja Stene <anjastene@nmbu.no>
+- Anja Stene <anja.stene@nmbu.no>
 - Ghazal Azadi <ghazal.azadi@nmbu.no>
