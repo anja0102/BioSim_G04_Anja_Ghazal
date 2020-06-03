@@ -5,3 +5,6 @@
 
 - Anja Stene <anja.stene@nmbu.no>
 - Ghazal Azadi <ghazal.azadi@nmbu.no>
+
+
+This is part one of ex1
