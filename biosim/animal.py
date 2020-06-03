@@ -1,6 +1,12 @@
 amount = 2
 beta = 0.9
 eta = 0.05
+a_half = 40
+phi_age = 0.6
+phi_weight = 0.1
+w_half = 10
+
+import math
 
 
 class Herbivore:
@@ -25,7 +31,7 @@ Requirements:
         self.species = 0
 
     def eat(self):
-        self.eating =+ amount
+        self.eating += amount
         self.update_weight("increase")
         self.update_fitness()
 
@@ -36,7 +42,7 @@ Requirements:
 
     def update_weight(self, direction):
         if direction == "increase":
-            self.weight += beta*amount
+            self.weight += beta * amount
 
         elif direction == "decrease":
             self.weight -= eta * self.weight
@@ -48,7 +54,8 @@ Requirements:
         if self.weight == 0:
             self.fitness = 0
         else:
-            self.fitness += 1
+            self.fitness += (1 / (1 + math.exp(phi_age * a_half))) * \
+                            (1 / (1 + math.exp(-phi_weight * a_half)))
 
     def get_weight(self):
         return self.weight
@@ -58,4 +65,3 @@ Requirements:
 
     def get_fitness(self):
         return self.fitness
-
