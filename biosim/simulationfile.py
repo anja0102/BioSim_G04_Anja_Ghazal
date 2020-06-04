@@ -22,7 +22,7 @@ for animal in animal_list:
 for i in range(50):
     for animal in animal_list:
         animal.eat()
-        animal.get_older()
+        animal.grow_older()
 
 
 for animal in animal_list:
