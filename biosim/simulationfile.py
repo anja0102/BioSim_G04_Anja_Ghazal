@@ -10,7 +10,7 @@ from biosim.animal import Herbivore
 animal_list = []
 
 
-for i in range(5):
+for i in range(10):
     animal = Herbivore()
     animal_list.append(animal)
 
@@ -25,7 +25,13 @@ for i in range(50):
         animal.grow_older()
 
 
-for animal in animal_list:
-    print("Age: ", animal.get_age(), "weight: ",
-          animal.get_weight(), "fitness: ", animal.get_fitness())
+from biosim.island import Cell, Lowland
+
+c = Lowland()
+c.animals = animal_list
+
+
+print("fodder: ", c.get_fodder())
+c.animals_eat()
+print("fodder: ", c.get_fodder())
 
