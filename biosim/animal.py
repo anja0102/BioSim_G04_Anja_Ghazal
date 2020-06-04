@@ -55,6 +55,7 @@ Requirements:
         self.update_weight("increase")
         self.recompute_fitness = True
         self.fitness_method()
+        return self.params['F']
 
     def grow_older(self):
         self.age += 1
@@ -107,3 +108,6 @@ Requirements:
 
     def get_fitness(self):
         return self.fitness
+
+    def get_F(self):
+        return self.params['F']
