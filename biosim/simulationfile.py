@@ -5,13 +5,13 @@
 # let 5 years pass
 # print animal attributes
 
-from biosim.animal import Herbivore
+from biosim.animal import Animal
 
 animal_list = []
 
 
 for i in range(10):
-    animal = Herbivore()
+    animal = Animal()
     animal_list.append(animal)
 
 for animal in animal_list:
