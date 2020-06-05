@@ -3,7 +3,7 @@ import numpy as np
 from numpy import random
 
 
-class Herbivore:
+class Animal:
     """ Creating the herbivore class
 Requirements:
 - age
@@ -29,9 +29,12 @@ Requirements:
               'omega': 0.4,
               'F': 10.}
 
-    def __init__(self):
+    def __init__(self, weight=None):
         self.age = 0
-        self.weight = self.initial_weight()
+        if weight is None:
+            self.weight = self.initial_weight()
+        else:
+            self.weight = weight
         self.recompute_fitness = True
         self.fitness = self.fitness_method()
         self.position = 0
@@ -40,7 +43,7 @@ Requirements:
         self.species = 0
 
     def eat(self):
-        self.eating += amount
+        self.eating += self.params['F']
         self.update_weight("increase")
         self.recompute_fitness = True
         self.fitness_method()
@@ -89,24 +92,43 @@ Requirements:
             self.recompute_fitness = False
         return self.fitness
 
-    def new_born(self, num_animals):
-        if num_animals < 2:
-            return False
-        if self.weight >= self.params['zeta'] * (self.params['w_birth']+self.params['sigma_birth']):
-            prob = min(1,  self.params['gamma'] * self.fitness *(num_animals - 1))
+    #@staticmethod
+    def check_if_mating_partner(self, num_animals):
+        if num_animals >= 2:
+            return True
         else:
-            prob = 0
-        newborn_weight = self.initial_weight()
-        if self.weight <= self.params['xi'] * newborn_weight:
-            prob = 0
-        make_newborn = np.random.binomial(n=1, p=prob, size=1)
+            return False
 
-        if make_newborn == [0]:
+    def check_parents_weight_conditions(self):
+        weight_condition = self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth'])
+        if self.weight < weight_condition:
             return False
         else:
             return True
 
+    def check_mother_minus_newborn_weight_conditions(self, newborn_weight):
+        if self.weight <= self.params['xi'] * newborn_weight:
+            return False
+        else:
+            return True
 
+    def check_if_create_offspring(self, num_animals):
+        prob = min(1, self.params['gamma'] * self.fitness * (num_animals - 1))
+        rand_nbr = random.uniform(0, 1, 1)
+        if prob > rand_nbr:
+            return True
+        else:
+            return False
+
+    def check_if_will_create_newborn(self, num_animals, newborn_weight):
+        if self.check_if_mating_partner(num_animals):
+            if self.check_parents_weight_conditions():
+                #newborn_weight = self.initial_weight()
+                if self.check_mother_minus_newborn_weight_conditions(newborn_weight):
+                    if_offspring = self.check_if_create_offspring(num_animals)
+                    return if_offspring
+        else:
+            return False
 
     def get_weight(self):
         return self.weight
@@ -120,11 +142,25 @@ Requirements:
     def get_F(self):
         return self.params['F']
 
+    def get_initial_weight(self):
+        return self.initial_weight()
+
 if __name__ == "__main__":
-    h = Herbivore()
+    num_animals=2
+    h = Animal()
     print(h.age)
     print(h.weight)
     print(h.fitness)
-    print(h.new_born(10))
-    make_newborn = np.random.binomial(n=1, p=prob, size=1)
-    print(h.)
+    for i in range(30):
+        h.eat()
+    #h.if_create_new_born(num_animals)
+    print(h.check_if_will_create_newborn(num_animals, 10))
+
+"""
+    print(h.check_if_mating_partner(num_animals))
+    print(h.check_parents_weight_conditions())
+    print(h.check_mother_minus_newborn_weight_conditions(newborn_weight=10))
+    print(h.check_if_create_offspring(num_animals))
+"""
+
+
