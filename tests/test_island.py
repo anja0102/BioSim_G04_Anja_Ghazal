@@ -1,12 +1,12 @@
 
 
-from biosim.animal import Herbivore
+from biosim.animal import Animal
 
 animal_list = []
 
 
 for i in range(5):
-    animal = Herbivore()
+    animal = Animal()
     animal_list.append(animal)
 
 

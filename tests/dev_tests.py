@@ -1,2 +1,2 @@
 
-from biosim.animal import Herbivore
+from biosim.animal import Animal
