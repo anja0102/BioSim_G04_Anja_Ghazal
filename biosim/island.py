@@ -2,7 +2,7 @@ class BioSim:
     pass
 
 
-class island:
+class Island:
     """
     - age
     - cells of type "celltype"
@@ -10,10 +10,11 @@ class island:
     -
     :return:
     """
-    def __init__(self):
-        self.cell_list=[]  #list to be populated in biosim class
 
-    #def grow_fodder:
+    def __init__(self):
+        self.cell_list = []  # list to be populated in biosim class
+
+    # def grow_fodder:
     #    for cell in cell_list:
     #        cell.set_fodder()
 
@@ -29,13 +30,13 @@ class island:
     def aging(self):
         pass
 
-    def looseWeight(self):
+    def loose_weight(self):
         pass
 
     def death(self):
         pass
 
-    #def eating for every cell
+    # def eating for every cell
 
 
 class Cell:
@@ -43,57 +44,74 @@ class Cell:
     Creating cell structure to describe properties in every square (cell)
     Common for all cells:
      - coordinates
-     - egde_cells for migration
+     - edge_cells for migration
      - animals
      - fodder_amount
      -
 
     :return:
     """
+
     def __init__(self):
-        self.animals=[]
-        self.available_fodder=0
+        self.animals = []
+        self.available_fodder = 0
 
     def place_animals(self):
         pass
 
-    def animals_eat(self):  #herbivore feeding
+    def animals_eat(self):  # herbivore feeding
         for animal in self.animals:
             if self.available_fodder >= animal.get_F():
                 self.available_fodder -= animal.eat()
 
+    def procreation(self):
+        """
+        Checks if there are at least one other animal of the same species in this cell
+        and having proper weight for both
+        then they will make a new offspring.
+        Returns
+        -------
+
+        """
+        for animal in self.animals:
+
+
+
     def get_fodder(self):
         return self.available_fodder
 
-class water(Cell):
+
+class Water(Cell):
     def __init__(self):
         self.animals = []
         self.available_fodder = 0
 
     def set_fodder(self):
-        self.available_fodder=0
+        self.available_fodder = 0
 
-class desert(Cell):
+
+class Desert(Cell):
     def __init__(self):
         self.animals = []
         self.available_fodder = 0
 
     def set_fodder(self):
-        self.available_fodder=0
+        self.available_fodder = 0
 
-class highland(Cell):
+
+class Highland(Cell):
     def __init__(self):
         self.animals = []
         self.available_fodder = 300
 
     def set_fodder(self):
-        self.available_fodder=300
+        self.available_fodder = 300
+
 
 class Lowland(Cell):
     def __init__(self):
         self.animals = []
         self.available_fodder = 800
 
-
     def set_fodder(self):
-        self.available_fodder=800
+        self.available_fodder = 800

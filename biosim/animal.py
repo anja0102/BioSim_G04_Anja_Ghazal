@@ -1,17 +1,6 @@
-amount = 2
-beta = 0.9
-eta = 0.05
-a_half = 40
-phi_age = 0.6
-phi_weight = 0.1
-w_half = 10
-mu = 0.25
-sigma_birth = 1.5
-
-
-
 import math
 import numpy as np
+from numpy import random
 
 
 class Herbivore:
@@ -100,6 +89,25 @@ Requirements:
             self.recompute_fitness = False
         return self.fitness
 
+    def new_born(self, num_animals):
+        if num_animals < 2:
+            return False
+        if self.weight >= self.params['zeta'] * (self.params['w_birth']+self.params['sigma_birth']):
+            prob = min(1,  self.params['gamma'] * self.fitness *(num_animals - 1))
+        else:
+            prob = 0
+        newborn_weight = self.initial_weight()
+        if self.weight <= self.params['xi'] * newborn_weight:
+            prob = 0
+        make_newborn = np.random.binomial(n=1, p=prob, size=1)
+
+        if make_newborn == [0]:
+            return False
+        else:
+            return True
+
+
+
     def get_weight(self):
         return self.weight
 
@@ -111,3 +119,12 @@ Requirements:
 
     def get_F(self):
         return self.params['F']
+
+if __name__ == "__main__":
+    h = Herbivore()
+    print(h.age)
+    print(h.weight)
+    print(h.fitness)
+    print(h.new_born(10))
+    make_newborn = np.random.binomial(n=1, p=prob, size=1)
+    print(h.)
