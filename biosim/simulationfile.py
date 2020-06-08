@@ -1,37 +1,38 @@
-# file for exploring simulation
+from biosim.island import Island
 
-# create 10 animals
-# print animal attributes
-# let 5 years pass
-# print animal attributes
+listof = [{'species': 'Herbivore', 'age': 5, 'weight': 25}, {'species': 'Herbivore', 'age': 5, 'weight': 25}
+    , {'species': 'Herbivore', 'age': 5, 'weight': 25}, {'species': 'Herbivore', 'age': 5, 'weight': 25}]
 
-from biosim.animal import Animal
+i = Island()
+i.create_new_cell()
 
-animal_list = []
+for cell in i.cell_list:
+    cell.place_animals(listof)
 
+num_years = 5
 
-for i in range(10):
-    animal = Animal()
-    animal_list.append(animal)
+for cell in i.cell_list:
+    print("number of animals in cell", cell.get_num_animals())
 
-for animal in animal_list:
-    print("Age: ", animal.get_age(), "weight: ",
-          animal.get_weight(), "fitness: ", animal.get_fitness())
+for cell in i.cell_list:
+    for animal in cell.herbivores_list:
+        print("age : ", animal.get_age())
 
-
-for i in range(50):
-    for animal in animal_list:
-        animal.eat()
-        animal.grow_older()
+i.feed_animals()
+i.feed_animals()
+i.feed_animals()
 
 
-from biosim.island import Cell, Lowland
+for year in range(num_years):
+    i.feed_animals()
+    i.procreation()
+    i.aging()
+    i.loose_weight()
+    i.death()
 
-c = Lowland()
-c.animals = animal_list
+for cell in i.cell_list:
+    print("number of animals in cell", cell.get_num_animals())
 
-
-print("fodder: ", c.get_fodder())
-c.animals_eat()
-print("fodder: ", c.get_fodder())
-
+for cell in i.cell_list:
+    for animal in cell.herbivores_list:
+        print("age after aging: ", animal.get_age())
