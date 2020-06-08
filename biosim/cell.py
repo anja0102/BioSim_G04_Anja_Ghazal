@@ -18,6 +18,7 @@ class Cell:
     def __init__(self):
         self.herbivores_list = []
         self.carnivores_list = []
+        self.newborn_herb_list=[]
         self.available_fodder = 0
 
     def place_animals(self, listof):
@@ -60,6 +61,8 @@ class Cell:
     def create_new_animal(self, newborn_weight):
         new_animal = Herbivore(weight=newborn_weight, age=0)
         self.herbivores_list.append(new_animal)
+
+
 
     def animals_age_by_one_year(self):
         for animal in self.herbivores_list:

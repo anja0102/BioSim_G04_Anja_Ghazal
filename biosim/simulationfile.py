@@ -9,30 +9,19 @@ i.create_new_cell()
 for cell in i.cell_list:
     cell.place_animals(listof)
 
-num_years = 5
+num_years = 200
 
-for cell in i.cell_list:
-    print("number of animals in cell", cell.get_num_animals())
-
-for cell in i.cell_list:
-    for animal in cell.herbivores_list:
-        print("age : ", animal.get_age())
-
-i.feed_animals()
-i.feed_animals()
-i.feed_animals()
-
+num_animals_everyyear=[]
 
 for year in range(num_years):
+    i.grow_fodder()
     i.feed_animals()
     i.procreation()
     i.aging()
     i.loose_weight()
     i.death()
 
-for cell in i.cell_list:
-    print("number of animals in cell", cell.get_num_animals())
+    for cell in i.cell_list:
+        num_animals_everyyear.append(cell.get_num_animals())
 
-for cell in i.cell_list:
-    for animal in cell.herbivores_list:
-        print("age after aging: ", animal.get_age())
+print(num_animals_everyyear)

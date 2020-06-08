@@ -21,6 +21,10 @@ class Island:
         c = Lowland()  #Later replaced by function creating different types of land
         self.cell_list.append(c)
 
+    def grow_fodder(self):
+        for cell in self.cell_list:
+            cell.set_fodder()
+
     def feed_animals(self):
         for cell in self.cell_list:
             cell.animals_eat()

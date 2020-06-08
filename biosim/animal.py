@@ -138,7 +138,7 @@ Requirements:
             return False
 
     def is_dying(self):
-        if self.weight == 0:
+        if self.weight <= 0:
             return True
         prob = self.params['omega'] * (1 - self.fitness)
         return self.from_prob_to_binary(prob)
