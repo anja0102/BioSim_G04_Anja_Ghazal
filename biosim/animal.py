@@ -29,8 +29,12 @@ Requirements:
               'omega': 0.4,
               'F': 10.}
 
-    def __init__(self, weight=None):
-        self.age = 0
+    def __init__(self, age=None, weight=None):
+        if age is None:
+            self.age = 0
+        else:
+            self.age = age
+
         if weight is None:
             self.weight = self.initial_weight()
         else:
@@ -112,13 +116,16 @@ Requirements:
         else:
             return True
 
-    def check_if_create_offspring(self, num_animals):
-        prob = min(1, self.params['gamma'] * self.fitness * (num_animals - 1))
+    def from_prob_to_binary(self, prob):
         rand_nbr = random.uniform(0, 1, 1)
         if prob > rand_nbr:
             return True
         else:
             return False
+
+    def check_if_create_offspring(self, num_animals):
+        prob = min(1, self.params['gamma'] * self.fitness * (num_animals - 1))
+        return self.from_prob_to_binary(prob)
 
     def check_if_will_create_newborn(self, num_animals, newborn_weight):
         if self.check_if_mating_partner(num_animals):
@@ -129,6 +136,12 @@ Requirements:
                     return if_offspring
         else:
             return False
+
+    def is_dying(self):
+        if self.weight == 0:
+            return True
+        prob = self.params['omega'] * (1 - self.fitness)
+        return self.from_prob_to_binary(prob)
 
     def get_weight(self):
         return self.weight
@@ -144,6 +157,13 @@ Requirements:
 
     def get_initial_weight(self):
         return self.initial_weight()
+
+
+class Herbivore(Animal):
+    def __init__(self, age, weight):
+        super().__init__()
+
+
 
 if __name__ == "__main__":
     num_animals=2
