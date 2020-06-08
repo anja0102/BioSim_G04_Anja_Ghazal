@@ -58,11 +58,14 @@ class Cell:
             if animal.check_if_will_create_newborn(len(self.herbivores_list), newborn_weight):
                 self.create_new_animal(newborn_weight)
 
+        self.add_newborn_to_fauna() #adding newborn to fauna after all animans procreate to not add on iterating list
+
     def create_new_animal(self, newborn_weight):
         new_animal = Herbivore(weight=newborn_weight, age=0)
-        self.herbivores_list.append(new_animal)
+        self.newborn_herb_list.append(new_animal)
 
-
+    def add_newborn_to_fauna(self):
+        self.herbivores_list.extend(self.newborn_herb_list)
 
     def animals_age_by_one_year(self):
         for animal in self.herbivores_list:
