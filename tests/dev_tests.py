@@ -9,7 +9,7 @@ def test_animals_eat():
     """
     animal = Animal()
     c = Lowland()
-    c.animal_list.append(animal)
+    c.herbivores_list.append(animal)
     initial_fodder = c.get_fodder()
     c.animals_eat()
     assert initial_fodder > c.get_fodder()
