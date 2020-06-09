@@ -42,16 +42,16 @@ Requirements:
         self.recompute_fitness = True
         self.fitness = self.fitness_method()
         self.position = 0
-        self.alive = True
-        self.eating = 0
         self.species = 0
 
-    def eat(self):
-        self.eating += self.params['F']
-        self.update_weight("increase")
+    def eat(self, amount=None):
+        if amount is None:
+            amount = self.params['F']
+
+        self.update_weight("increase", amount)
         self.recompute_fitness = True
         self.fitness_method()
-        return self.params['F']
+        return amount
 
     def grow_older(self):
         self.age += 1
@@ -68,9 +68,12 @@ Requirements:
         rn = np.random.normal(cls.params['w_birth'], cls.params['sigma_birth'])
         return rn
 
-    def update_weight(self, direction):
+    def update_weight(self, direction, amount=None):
+        if amount is None:
+            amount = self.params['F']
+
         if direction == "increase":
-            self.weight += self.params['beta'] * self.params['F']
+            self.weight += self.params['beta'] * amount
 
         elif direction == "decrease":
             self.weight -= self.params['eta'] * self.weight

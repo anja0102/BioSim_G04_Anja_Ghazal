@@ -43,6 +43,8 @@ class Cell:
         for animal in randomized_order:
             if self.available_fodder >= animal.get_F():
                 self.available_fodder -= animal.eat()
+            elif animal.get_F() > self.available_fodder > 0:
+                self.available_fodder -= animal.eat(self.available_fodder)
 
     def procreation(self):
         """
@@ -96,7 +98,6 @@ class Water(Cell):
 
 class Desert(Cell):
     def __init__(self):
-        self.animals = []
         self.available_fodder = 0
 
     def set_fodder(self):
@@ -105,7 +106,6 @@ class Desert(Cell):
 
 class Highland(Cell):
     def __init__(self):
-        self.animals = []
         self.available_fodder = 300
 
     def set_fodder(self):
@@ -115,7 +115,6 @@ class Highland(Cell):
 class Lowland(Cell):
     def __init__(self):
         super().__init__()
-        self.animals = []
         self.available_fodder = 800
 
     def set_fodder(self):
