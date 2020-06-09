@@ -29,25 +29,25 @@ Requirements:
             #CHECK VALUE ERROR
             self.weight = weight
 
-        self.recompute_fitness = True
-        self.fitness = self.fitness_method()
-        self.position = 0
-        self.species = 0
+        # self.recompute_fitness = True
+        # self.fitness = self.fitness_method()
+        # self.position = 0
+        # self.species = 0
 
     def eat(self, amount=None):
         if amount is None:
             amount = self.params['F']
 
-        self.update_weight("increase", amount)
-        self.recompute_fitness = True
-        self.fitness_method()
+        self.weight += self.params['beta'] * amount
+        # self.recompute_fitness = True
+        # self.fitness_method()
         return amount
 
     def grow_older(self):
         self.age += 1
         self.update_weight("decrease")
-        self.recompute_fitness = True
-        self.fitness_method()
+        # self.recompute_fitness = True
+        # self.fitness_method()
 
     @classmethod
     def initial_weight(cls):
@@ -74,24 +74,27 @@ Requirements:
     @staticmethod
     def _fitness_formula(age, weight, params):
         q1 = 1 / (1 + math.exp(params['phi_age'] * (age - params['a_half'])))
-        q2 = 1 / (1 + math.exp(-1 * (params['phi_weight'] * (weight - params['a_half']))))
+        q2 = 1 / (1 + math.exp(-1 * (params['phi_weight'] * (weight - params['w_half']))))
         return q1*q2
 
     def calculate_fitness(self):
         if self.weight == 0:
-            self.fitness = 0
+            return 0
         else:
-            self.fitness = self._fitness_formula(self.age, self.weight, self.params)
+            return self._fitness_formula(self.age, self.weight, self.params)
 
-    def fitness_method(self):
-        if self.recompute_fitness:
-            self.calculate_fitness()
-            self.recompute_fitness = False
-        return self.fitness
+
+
+    # def fitness_method(self):
+        # if self.recompute_fitness:
+        #     self.calculate_fitness()
+        #     self.recompute_fitness = False
+        # return self.fitness
 
     def from_prob_to_binary(self, prob):
-        rand_nbr = random.uniform(0, 1, 1)
-        if prob > rand_nbr:
+        rand_nbr = np.random.random()
+        # print('rand_nbr, prob: ', rand_nbr, prob)
+        if  rand_nbr < prob:
             return True
         else:
             return False
@@ -101,7 +104,8 @@ Requirements:
             weight_condition = self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth'])
             if self.weight > weight_condition:
                 return True
-
+            else:
+                return False
         else:
             return False
 
@@ -115,7 +119,7 @@ Requirements:
 
     def create_newborn(self, num_animals):
         if self.check_mating_weight_conditions(num_animals):
-            prob = min(1, self.params['gamma'] * self.fitness * (num_animals - 1))
+            prob = min(1, self.params['gamma'] * self.calculate_fitness() * (num_animals - 1))
             creating = self.from_prob_to_binary(prob)
             if creating:
                 newborn = Herbivore()  # OBS HOW TO MAKE THE ANIMAL OBJECT OF CORRECT SPECIES
@@ -127,23 +131,24 @@ Requirements:
     def is_dying(self):
         if self.weight <= 0:
             return True
-        prob = self.params['omega'] * (1 - self.fitness)
+        prob = self.params['omega'] * (1 - self.calculate_fitness())
+        # print('prob inside is_dying, fitness', prob, self.calculate_fitness())
         return self.from_prob_to_binary(prob)
 
-    def get_weight(self):
-        return self.weight
+    # def get_weight(self):
+    #     return self.weight
+    #
+    # def get_age(self):
+    #     return self.age
 
-    def get_age(self):
-        return self.age
-
-    def get_fitness(self):
-        return self.fitness
+    # def get_fitness(self):
+    #     return self.fitness
 
     def get_F(self):
         return self.params['F']
 
-    def get_initial_weight(self):
-        return self.initial_weight()
+    # def get_initial_weight(self):
+    #     return self.initial_weight()
 
 
 class Herbivore(Animal):
@@ -153,7 +158,7 @@ class Herbivore(Animal):
               'beta': 0.9,
               'eta': 0.05,
               'a_half': 40.,
-              'phi_age': 0.2,
+              'phi_age': 0.6,
               'w_half': 10.,
               'phi_weight': 0.1,
               'mu': 0.25,
