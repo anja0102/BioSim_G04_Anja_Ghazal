@@ -14,31 +14,21 @@ Requirements:
 - eating_result
 - species
 """
-    params = {'w_birth': 8.,
-              'sigma_birth': 1.5,
-              'beta': 0.9,
-              'eta': 0.05,
-              'a_half': 40.,
-              'phi_age': 0.2,
-              'w_half': 10.,
-              'phi_weight': 0.1,
-              'mu': 0.25,
-              'gamma': 0.2,
-              'zeta': 3.5,
-              'xi': 1.2,
-              'omega': 0.4,
-              'F': 10.}
+    params = {}
 
     def __init__(self, age=None, weight=None):
         if age is None:
             self.age = 0
         else:
+            #CHECK VALUE ERROR
             self.age = age
 
         if weight is None:
             self.weight = self.initial_weight()
         else:
+            #CHECK VALUE ERROR
             self.weight = weight
+
         self.recompute_fitness = True
         self.fitness = self.fitness_method()
         self.position = 0
@@ -116,17 +106,19 @@ Requirements:
             return False
 
     def check_mother_minus_newborn_weight_conditions(self, newborn_weight):
-        if self.weight <= self.params['xi'] * newborn_weight:
-            return False
-        else:
+        if self.weight >= self.params['xi'] * newborn_weight:
+            # Reduce weight of mother by the weight of newborn * xi
+            self.weight -= self.params['xi'] * newborn_weight
             return True
+        else:
+            return False
 
     def create_newborn(self, num_animals):
         if self.check_mating_weight_conditions(num_animals):
             prob = min(1, self.params['gamma'] * self.fitness * (num_animals - 1))
             creating = self.from_prob_to_binary(prob)
             if creating:
-                newborn = Animal()
+                newborn = Herbivore()  # OBS HOW TO MAKE THE ANIMAL OBJECT OF CORRECT SPECIES
                 if self.check_mother_minus_newborn_weight_conditions(newborn.weight):
                     return newborn
             else:
@@ -155,15 +147,47 @@ Requirements:
 
 
 class Herbivore(Animal):
-    def __init__(self, age, weight):
-        super().__init__()
+    #HERBIVORE PARAMS HERE
+    params = {'w_birth': 8.,
+              'sigma_birth': 1.5,
+              'beta': 0.9,
+              'eta': 0.05,
+              'a_half': 40.,
+              'phi_age': 0.2,
+              'w_half': 10.,
+              'phi_weight': 0.1,
+              'mu': 0.25,
+              'gamma': 0.2,
+              'zeta': 3.5,
+              'xi': 1.2,
+              'omega': 0.4,
+              'F': 10.}
+
+    def __init__(self, age=None, weight=None):
+        """
+        subclass of Animal class.
+        Parameters
+        ----------
+        age: int
+        weight: float
+        """
+        super().__init__(age, weight)
 
     #Herbivore eating method
 
 
 class Carnivore(Animal):
-    def __init__(self, age, weight):
-        super().__init__()
+    # CARNIVORE params
+
+    def __init__(self, age=None, weight=None):
+        """
+        subclass of Animal class.
+        Parameters
+        ----------
+        age: int
+        weight: float
+        """
+        super().__init__(age, weight)
 
     #Carnivore eating method
 

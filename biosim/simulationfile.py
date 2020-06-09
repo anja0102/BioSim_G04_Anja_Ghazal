@@ -1,4 +1,6 @@
 from biosim.island import Island
+import numpy as np
+np.random.seed(100)
 
 listof = [{'species': 'Herbivore', 'age': 5, 'weight': 25} for _ in range(100)]
 
@@ -9,7 +11,7 @@ i.create_new_cell()
 for cell in i.cell_list:
     cell.place_animals(listof)
 
-num_years = 100
+num_years = 200
 
 num_animals_everyyear=[]
 
