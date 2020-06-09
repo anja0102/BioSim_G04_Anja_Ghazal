@@ -99,26 +99,6 @@ Requirements:
             self.recompute_fitness = False
         return self.fitness
 
-    #@staticmethod
-    def check_if_mating_partner(self, num_animals):
-        if num_animals >= 2:
-            return True
-        else:
-            return False
-
-    def check_parents_weight_conditions(self):
-        weight_condition = self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth'])
-        if self.weight < weight_condition:
-            return False
-        else:
-            return True
-
-    def check_mother_minus_newborn_weight_conditions(self, newborn_weight):
-        if self.weight <= self.params['xi'] * newborn_weight:
-            return False
-        else:
-            return True
-
     def from_prob_to_binary(self, prob):
         rand_nbr = random.uniform(0, 1, 1)
         if prob > rand_nbr:
@@ -126,19 +106,31 @@ Requirements:
         else:
             return False
 
-    def check_if_create_offspring(self, num_animals):
-        prob = min(1, self.params['gamma'] * self.fitness * (num_animals - 1))
-        return self.from_prob_to_binary(prob)
+    def check_mating_weight_conditions(self, num_animals):
+        if num_animals >= 2:
+            weight_condition = self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth'])
+            if self.weight > weight_condition:
+                return True
 
-    def check_if_will_create_newborn(self, num_animals, newborn_weight):
-        if self.check_if_mating_partner(num_animals):
-            if self.check_parents_weight_conditions():
-                #newborn_weight = self.initial_weight()
-                if self.check_mother_minus_newborn_weight_conditions(newborn_weight):
-                    if_offspring = self.check_if_create_offspring(num_animals)
-                    return if_offspring
         else:
             return False
+
+    def check_mother_minus_newborn_weight_conditions(self, newborn_weight):
+        if self.weight <= self.params['xi'] * newborn_weight:
+            return False
+        else:
+            return True
+
+    def create_newborn(self, num_animals):
+        if self.check_mating_weight_conditions(num_animals):
+            prob = min(1, self.params['gamma'] * self.fitness * (num_animals - 1))
+            creating = self.from_prob_to_binary(prob)
+            if creating:
+                newborn = Animal()
+                if self.check_mother_minus_newborn_weight_conditions(newborn.weight):
+                    return newborn
+            else:
+                return None
 
     def is_dying(self):
         if self.weight <= 0:
@@ -165,6 +157,16 @@ Requirements:
 class Herbivore(Animal):
     def __init__(self, age, weight):
         super().__init__()
+
+    #Herbivore eating method
+
+
+class Carnivore(Animal):
+    def __init__(self, age, weight):
+        super().__init__()
+
+    #Carnivore eating method
+
 
 
 

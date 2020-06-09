@@ -22,10 +22,10 @@ class Cell:
         self.available_fodder = 0
 
     def place_animals(self, listof):
-        for dict in listof:
-            if dict.get("species") == 'Herbivore':
-                age=dict.get("age")
-                weight=dict.get("weight")
+        for dct in listof:
+            if dct.get("species") == 'Herbivore':
+                age = dct.get("age")
+                weight = dct.get("weight")
                 animal = Herbivore(age=age, weight=weight)
                 self.herbivores_list.append(animal)
 
@@ -39,6 +39,7 @@ class Cell:
         self.herbivores_list = [animal for animal in animal_list_c if not animal.is_dying()]
 
     def animals_eat(self):  # herbivore feeding
+        # I would remove the randomise list function, and just shuffle inplace
         randomized_order = self.randomise_list()
         for animal in randomized_order:
             if self.available_fodder >= animal.get_F():
@@ -56,18 +57,20 @@ class Cell:
 
         """
         for animal in self.herbivores_list:
-            newborn_weight = animal.get_initial_weight()
-            if animal.check_if_will_create_newborn(len(self.herbivores_list), newborn_weight):
-                self.create_new_animal(newborn_weight)
+            offspring = animal.create_newborn(len(self.herbivores_list))
+            if offspring is not None:
+                self.newborn_herb_list.append(offspring)
 
         self.add_newborn_to_fauna() #adding newborn to fauna after all animans procreate to not add on iterating list
 
+    #Maybe delete this?
     def create_new_animal(self, newborn_weight):
         new_animal = Herbivore(weight=newborn_weight, age=0)
         self.newborn_herb_list.append(new_animal)
 
     def add_newborn_to_fauna(self):
         self.herbivores_list.extend(self.newborn_herb_list)
+        self.newborn_herb_list = []
 
     def animals_age_by_one_year(self):
         for animal in self.herbivores_list:
