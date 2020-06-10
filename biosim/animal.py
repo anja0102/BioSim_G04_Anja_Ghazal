@@ -1,36 +1,54 @@
 import math
 import numpy as np
-from numpy import random
 
 
 class Animal:
-    """ Creating the herbivore class
-Requirements:
-- age
-- weight
-- fitness
-- position
-- alive
-- eating_result
-- species
-"""
+    """
+    Creating the animal class
+    Fauna which are common among herbivores and carnivores are listed as methods in Animal
+    class
+
+    """
     params = {}
 
     def __init__(self, age=None, weight=None):
+        """
+        Constructor for the class, if weight or age initialized their value is set
+        if not, initial value for age would be 0 and for weight would be extracted
+        from the initial_weight method.
+        Parameters
+        ----------
+        age : int
+        weight : int
+
+        """
         if age is None:
             self.age = 0
         else:
-            #CHECK VALUE ERROR
+            # CHECK VALUE ERROR
             self.age = age
 
         if weight is None:
             self.weight = self.initial_weight()
         else:
-            #CHECK VALUE ERROR
+            # CHECK VALUE ERROR
             self.weight = weight
 
-    #Move this down to herb class, since not used by carn
+    # Move this down to herb class, since not used by carnivores
     def eat(self, amount=None):
+        """
+        Herbivores eat based on the specific amount. If amount is initialized the value would
+        be set. If not its value will be chosen based on the standard parameters for herbivore
+        class
+        Parameters
+        ----------
+        amount : int
+
+        Returns
+        -------
+        amount of food the herbivore consumed.
+
+        """
         if amount is None:
             amount = self.params['F']
 
@@ -38,6 +56,10 @@ Requirements:
         return amount
 
     def grow_older(self):
+        """
+        When the method is called the animal grows older for one year
+
+        """
         self.age += 1
         self.update_weight("decrease")
 
@@ -45,12 +67,25 @@ Requirements:
     def initial_weight(cls):
         """
         initialize the weights based on the normal distribution
-        :return: initial weight
+
+        Returns
+        -------
+        Initial weight
+
         """
         rn = np.random.normal(cls.params['w_birth'], cls.params['sigma_birth'])
         return rn
 
     def update_weight(self, direction, amount=None):
+        """
+        This method determines if the weight should either be decreased or increased.
+        In addition it updates the weight based on the parameters been given to.
+        Parameters
+        ----------
+        direction
+        amount : int
+
+        """
         if amount is None:
             amount = self.params['F']
 
@@ -65,20 +100,37 @@ Requirements:
 
     @staticmethod
     def _fitness_formula(age, weight, params):
+        """
+        The formula which would be used to calculate the fitness
+        Parameters
+        ----------
+        age :  int
+        weight : int
+        params : int
+
+        Returns
+        -------
+        Output of fitness formula
+
+        """
         q1 = 1 / (1 + math.exp(params['phi_age'] * (age - params['a_half'])))
         q2 = 1 / (1 + math.exp(-1 * (params['phi_weight'] * (weight - params['w_half']))))
         return q1*q2
 
     def calculate_fitness(self):
+        """
+
+        Returns
+        -------
+
+        """
         if self.weight == 0:
             return 0
         else:
             return self._fitness_formula(self.age, self.weight, self.params)
 
-
     def from_prob_to_binary(self, prob):
         rand_nbr = np.random.random()
-        # print('rand_nbr, prob: ', rand_nbr, prob)
         if rand_nbr < prob:
             return True
         else:
@@ -129,7 +181,7 @@ Requirements:
     # def get_fitness(self):
     #     return self.fitness
 
-    def get_F(self):
+    def get_fodder(self):
         return self.params['F']
 
     # def get_initial_weight(self):
@@ -137,7 +189,7 @@ Requirements:
 
 
 class Herbivore(Animal):
-    #HERBIVORE PARAMS HERE
+    # HERBIVORE PARAMS HERE
     params = {'w_birth': 8.,
               'sigma_birth': 1.5,
               'beta': 0.9,
@@ -192,14 +244,14 @@ class Carnivore(Animal):
         """
         super().__init__(age, weight)
 
-    #Carnivore eating method
+    # Carnivore eating method
 
     def check_carn_prey(self, herb_fitness, carn_fitness):
 
         if carn_fitness <= herb_fitness:
             return False
 
-        elif (carn_fitness-herb_fitness) < self.params['DeltaPhiMax'] > 0 :
+        elif (carn_fitness-herb_fitness) < self.params['DeltaPhiMax'] > 0:
             prob = (carn_fitness-herb_fitness) / self.params['DeltaPhiMax']
             return self.from_prob_to_binary(prob)
 
@@ -207,28 +259,25 @@ class Carnivore(Animal):
             return True
 
     def eat(self, herb_list):
-        eaten_herbs=[]
+        eaten_herbs = []
 
         for herbivore in herb_list:
             if self.check_carn_prey(herbivore.calculate_fitness(), self.calculate_fitness()):
                 eaten_herbs.append(herbivore)
                 self.weight += self.params['beta'] * herbivore.weight
 
-            if sum(herbi.weight for herbi in eaten_herbs) >= self.params['F']:
+            if sum(herb.weight for herb in eaten_herbs) >= self.params['F']:
                 return eaten_herbs
 
         return eaten_herbs
 
-
-if __name__ == "__main__":
-    num_animals=2
-    h = Animal()
-    print(h.age)
-    print(h.weight)
-    print(h.fitness)
-    for i in range(30):
-        h.eat()
-    #h.if_create_new_born(num_animals)
-    print(h.check_if_will_create_newborn(num_animals, 10))
-
-
+# if __name__ == "__main__":
+#     num_animals=2
+#     h = Animal()
+#     print(h.age)
+#     print(h.weight)
+#     print(h.fitness)
+#     for i in range(30):
+#         h.eat()
+#     # h.if_create_new_born(num_animals)
+#     print(h.check_if_will_create_newborn(num_animals, 10))
