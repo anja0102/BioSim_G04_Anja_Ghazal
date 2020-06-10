@@ -29,23 +29,24 @@ class Cell:
                 animal = Herbivore(age=age, weight=weight)
                 self.herbivores_list.append(animal)
 
-    def randomise_list(self):
-        rnd_list = self.herbivores_list.copy()
-        np.random.shuffle(rnd_list)
-        return rnd_list
+
 
     def animals_die(self):
-        animal_list_c = self.herbivores_list.copy()
-        self.herbivores_list = [animal for animal in animal_list_c if not animal.is_dying()]
+        # animal_list_c = self.herbivores_list.copy()
+        # print(animal_list_c)
+        survivors = [animal for animal in self.herbivores_list if not animal.is_dying()]
+        self.herbivores_list = survivors
+        # print(self.herbivores_list)
 
     def animals_eat(self):  # herbivore feeding
         # I would remove the randomise list function, and just shuffle inplace
-        randomized_order = self.randomise_list()
-        for animal in randomized_order:
+        np.random.shuffle(self.herbivores_list)
+        for animal in self.herbivores_list:
             if self.available_fodder >= animal.get_F():
                 self.available_fodder -= animal.eat()
             elif animal.get_F() > self.available_fodder > 0:
-                self.available_fodder -= animal.eat(self.available_fodder)
+                animal.eat(self.available_fodder)
+                self.available_fodder = 0
 
     def procreation(self):
         """
