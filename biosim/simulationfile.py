@@ -2,8 +2,8 @@ from biosim.island import Island
 import numpy as np
 np.random.seed(1)
 
-listof = [{'species': 'Herbivore', 'age': 0, 'weight': 20} for _ in range(50)]
-listof2 = [{'species': 'Carnivore', 'age': 0, 'weight': 100} for _ in range(10)]
+listof = [{'species': 'Herbivore', 'age': 0, 'weight': 20} for _ in range(10)]
+listof2 = [{'species': 'Carnivore', 'age': 0, 'weight': 20} for _ in range(10)]
 
 listof.extend(listof2)
 
