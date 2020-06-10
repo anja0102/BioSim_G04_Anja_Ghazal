@@ -5,7 +5,7 @@ from scipy.stats import kstest
 
 def test_animals_eat():
     """
-    Test if the animal eats and the amount of fodder decreases
+    To test if the animal eats and the amount of fodder decreases
     """
     herb = Herbivore()
     c = Lowland()
@@ -50,3 +50,23 @@ def test_update_weight():
     herb.grow_older()  # Lets see if the animal loses its weight after growing one year older
     weight_after_aging = herb.weight
     assert weight_after_aging - weight_after_eating < 0
+
+
+def test_calculate_fitness():
+    """
+    To test firstly if the weight is 0 the fitness would be also zero or not
+    Secondly to see if the fitness is a number between 0 and 1
+    Thirdly to see if the fitness increases by increment in weight
+    Lastly if the fitness decreases by aging
+    """
+    herb = Herbivore(weight=0)
+    assert herb.calculate_fitness() == 0
+    herb = Herbivore()
+    assert 0 < herb.calculate_fitness() < 1
+    fitness_before_weighting = herb.calculate_fitness()
+    herb.eat()  # Feeding the animal to increase the weight
+    fitness_after_weighting_but_before_aging = herb.calculate_fitness()
+    assert fitness_after_weighting_but_before_aging - fitness_before_weighting > 0
+    herb.grow_older()
+    fitness_after_aging = herb.calculate_fitness()
+    assert fitness_after_aging - fitness_after_weighting_but_before_aging < 0
