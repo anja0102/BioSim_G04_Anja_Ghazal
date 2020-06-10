@@ -29,25 +29,17 @@ Requirements:
             #CHECK VALUE ERROR
             self.weight = weight
 
-        # self.recompute_fitness = True
-        # self.fitness = self.fitness_method()
-        # self.position = 0
-        # self.species = 0
-
+    #Move this down to herb class, since not used by carn
     def eat(self, amount=None):
         if amount is None:
             amount = self.params['F']
 
         self.weight += self.params['beta'] * amount
-        # self.recompute_fitness = True
-        # self.fitness_method()
         return amount
 
     def grow_older(self):
         self.age += 1
         self.update_weight("decrease")
-        # self.recompute_fitness = True
-        # self.fitness_method()
 
     @classmethod
     def initial_weight(cls):
@@ -84,17 +76,10 @@ Requirements:
             return self._fitness_formula(self.age, self.weight, self.params)
 
 
-
-    # def fitness_method(self):
-        # if self.recompute_fitness:
-        #     self.calculate_fitness()
-        #     self.recompute_fitness = False
-        # return self.fitness
-
     def from_prob_to_binary(self, prob):
         rand_nbr = np.random.random()
         # print('rand_nbr, prob: ', rand_nbr, prob)
-        if  rand_nbr < prob:
+        if rand_nbr < prob:
             return True
         else:
             return False
@@ -135,8 +120,8 @@ Requirements:
         # print('prob inside is_dying, fitness', prob, self.calculate_fitness())
         return self.from_prob_to_binary(prob)
 
-    # def get_weight(self):
-    #     return self.weight
+    def get_weight(self):
+        return self.weight
     #
     # def get_age(self):
     #     return self.age
@@ -178,11 +163,24 @@ class Herbivore(Animal):
         """
         super().__init__(age, weight)
 
-    #Herbivore eating method
-
 
 class Carnivore(Animal):
     # CARNIVORE params
+    params = {'w_birth': 6.,
+              'sigma_birth': 1.0,
+              'beta': 0.75,
+              'eta': 0.125,
+              'a_half': 40.,
+              'phi_age': 0.3,
+              'w_half': 4.,
+              'phi_weight': 0.4,
+              'mu': 0.4,
+              'gamma': 0.8,
+              'zeta': 3.5,
+              'xi': 1.1,
+              'omega': 0.8,
+              'F': 50.,
+              'DeltaPhiMax': 10.}
 
     def __init__(self, age=None, weight=None):
         """
@@ -196,7 +194,32 @@ class Carnivore(Animal):
 
     #Carnivore eating method
 
+    def check_carn_prey(self, herb_fitness, carn_fitness):
 
+        if carn_fitness <= herb_fitness:
+            prob = 0
+
+        elif (carn_fitness-herb_fitness) < self.params['DeltaPhiMax'] >0 :
+            prob = (carn_fitness-herb_fitness) / self.params['DeltaPhiMax']
+
+        else:
+            prob = 1
+
+        return self.from_prob_to_binary(prob)
+
+    def eat(self, herb_list):
+        eaten_herbs=[]
+
+        for herbivore in herb_list:
+            if self.check_carn_prey(herbivore.calculate_fitness(), self.calculate_fitness()):
+                if sum(herbi.weight for herbi in eaten_herbs) + herbivore.weight <= self.params['F']:
+                    eaten_herbs.append(herbivore)
+                    self.weight += self.params['beta'] * herbivore.weight
+
+            if sum(herbi.weight for herbi in eaten_herbs) >= self.params['F']:
+                return eaten_herbs
+
+        return eaten_herbs
 
 
 if __name__ == "__main__":
@@ -209,12 +232,5 @@ if __name__ == "__main__":
         h.eat()
     #h.if_create_new_born(num_animals)
     print(h.check_if_will_create_newborn(num_animals, 10))
-
-"""
-    print(h.check_if_mating_partner(num_animals))
-    print(h.check_parents_weight_conditions())
-    print(h.check_mother_minus_newborn_weight_conditions(newborn_weight=10))
-    print(h.check_if_create_offspring(num_animals))
-"""
 
 
