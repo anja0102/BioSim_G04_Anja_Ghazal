@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from biosim.island import Island
 
-listof = [{'species': 'Herbivore', 'age': 0, 'weight': 20} for _ in range(50)]
-listof2 = [{'species': 'Carnivore', 'age': 0, 'weight': 20} for _ in range(50)]
+listof = [{'species': 'Herbivore', 'age': 5, 'weight': 20} for _ in range(50)]
+listof2 = [{'species': 'Carnivore', 'age': 5, 'weight': 50} for _ in range(20)]
 
 listof.extend(listof2)
 
@@ -42,7 +42,7 @@ def update(n_steps):
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
     ax.set_xlim(0, n_steps)
-    ax.set_ylim(0, 250)
+    ax.set_ylim(0, 180)
 
     line1 = ax.plot(np.arange(n_steps),
                    np.full(n_steps, np.nan), 'b-')[0]
