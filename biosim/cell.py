@@ -62,15 +62,19 @@ class Cell:
     def carn_eat(self):
         #Carnivore feeding
 
+
         #sort herbivores: Lowest to highest fitness
         self.herbivores_list.sort(key=lambda x: x.calculate_fitness())
 
         #sort carnivores: Highest to lowest fitness
         self.carnivores_list.sort(key=lambda x: x.calculate_fitness(), reverse=True)
 
+
         for carnivore in self.carnivores_list:
             eaten_herbivores = carnivore.eat(self.herbivores_list)
             herb_survivors = [animal for animal in self.herbivores_list if animal not in eaten_herbivores]
+            #Improvement for later: check if herb_survivors needs to be sorted before sorting
+            herb_survivors.sort(key=lambda x: x.calculate_fitness())
             self.herbivores_list = herb_survivors
 
 
