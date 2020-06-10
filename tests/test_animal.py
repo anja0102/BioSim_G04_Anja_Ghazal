@@ -1,6 +1,7 @@
 from biosim.island import Lowland
-from biosim.animal import Herbivore
+from biosim.animal import Herbivore, Carnivore
 from scipy.stats import kstest
+import numpy as np
 
 
 def test_animals_eat():
@@ -70,3 +71,75 @@ def test_calculate_fitness():
     herb.grow_older()
     fitness_after_aging = herb.calculate_fitness()
     assert fitness_after_aging - fitness_after_weighting_but_before_aging < 0
+
+
+def test_create_new_born_conditions():
+    """
+    To test if the mother can give birth to child conditioned to:
+    - Existence of more than two animal in cell
+    - Amount of its weight
+    -
+    """
+    herb = Herbivore()
+    num_animals = 1
+    assert herb.check_mating_weight_conditions(num_animals) is False
+    zeta = 3.5
+    w_birth = 8
+    sigma_birth = 1.5
+    if herb.weight < zeta * (w_birth + sigma_birth):
+        assert herb.check_mating_weight_conditions(2) is False
+
+
+def test_mother_weight_decrement():
+    """
+    To test if the mother loses weight after giving birth to the child
+    If not its weight should not change
+    """
+    herb = Herbivore()
+    for _ in range(10):
+        herb.eat()  # Feeding the animal sufficiently to be able to give birth
+    before_birth_weight = herb.weight
+    create_new_born = herb.create_newborn(2)
+    after_birth_weight = herb.weight
+    if create_new_born is None:
+        assert after_birth_weight - before_birth_weight == 0
+    else:
+        assert after_birth_weight - before_birth_weight < 0
+
+
+def test_death(mocker):
+    """
+    To test if the animal dies when its weight is less / equal to zero
+    Since there's a reverse relationship between death and fitness animals with higher
+    fitness should have lower probability to die. This issue is also being tested here
+    """
+    herb = Herbivore(weight=0)
+    assert herb.is_dying() is True
+    herb = Herbivore()
+    prob_to_die_with_low_weight = []
+    herb.eat()  # Feeding the herbivore for one time
+    for _ in range(100):
+        prob_to_die_with_low_weight.append(herb.is_dying())  # A list of boolean for
+        # 100 times comparing random number with the probability of dying after one time feeding
+    for _ in range(20):
+        herb.eat()  # Feeding the herbivore for 20 times which leads to higher fitness
+    prob_to_die_with_high_weight = []
+    for _ in range(100):
+        prob_to_die_with_high_weight.append(herb.is_dying())  # A list of boolean for
+        # 100 times comparing random number with the probability of dying after 20 times feeding
+    assert np.mean(prob_to_die_with_high_weight) < np.mean(prob_to_die_with_low_weight)
+
+
+def test_when_carnivore_prey():
+    """
+    To test the condition for carnivores to prey on herbivores:
+    - If the carnivore fitness is greater than herbivore fitness
+    """
+    herb = Herbivore()
+    carn = Carnivore()
+    for _ in range(20):
+        herb.eat()  # Increasing fitness of the herbivore
+    carn.grow_older()  # Decreasing fitness of the carnivore
+    herb_fitness = herb.calculate_fitness()
+    carn_fitness = carn.calculate_fitness()
+    assert carn.check_carn_prey(herb_fitness, carn_fitness) is False
