@@ -45,8 +45,7 @@ class Cell:
         self.herbivores_list = survivors
         # print(self.herbivores_list)
 
-    def animals_eat(self):
-
+    def herb_eat(self):
         # herbivore feeding
         np.random.shuffle(self.herbivores_list)
         for animal in self.herbivores_list:
@@ -56,6 +55,7 @@ class Cell:
                 animal.eat(self.available_fodder)
                 self.available_fodder = 0
 
+    def carn_eat(self):
         #Carnivore feeding
 
         #sort herbivores: Lowest to highest fitness
@@ -69,6 +69,10 @@ class Cell:
             herb_survivors = [animal for animal in self.herbivores_list if animal not in eaten_herbivores]
             self.herbivores_list = herb_survivors
 
+
+    def animals_eat(self):
+        self.herb_eat()
+        self.carn_eat()
 
     def procreation(self):
         """

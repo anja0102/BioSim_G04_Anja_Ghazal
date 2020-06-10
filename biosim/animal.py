@@ -197,15 +197,14 @@ class Carnivore(Animal):
     def check_carn_prey(self, herb_fitness, carn_fitness):
 
         if carn_fitness <= herb_fitness:
-            prob = 0
+            return False
 
-        elif (carn_fitness-herb_fitness) < self.params['DeltaPhiMax'] >0 :
+        elif (carn_fitness-herb_fitness) < self.params['DeltaPhiMax'] > 0 :
             prob = (carn_fitness-herb_fitness) / self.params['DeltaPhiMax']
+            return self.from_prob_to_binary(prob)
 
         else:
-            prob = 1
-
-        return self.from_prob_to_binary(prob)
+            return True
 
     def eat(self, herb_list):
         eaten_herbs=[]
