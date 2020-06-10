@@ -41,8 +41,12 @@ class Cell:
     def animals_die(self):
         # animal_list_c = self.herbivores_list.copy()
         # print(animal_list_c)
-        survivors = [animal for animal in self.herbivores_list if not animal.is_dying()]
-        self.herbivores_list = survivors
+        survivors_h = [animal for animal in self.herbivores_list if not animal.is_dying()]
+        self.herbivores_list = survivors_h
+
+        survivors_c = [animal for animal in self.carnivores_list if not animal.is_dying()]
+        self.carnivores_list = survivors_c
+
         # print(self.herbivores_list)
 
     def herb_eat(self):

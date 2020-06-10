@@ -41,10 +41,10 @@ class Island:
         for cell in self.cell_list:
             cell.animals_die()
 
-    def loose_weight(self):
+    #def loose_weight(self):
         #Every year, the weight of the animal decreases by eta * omega.
-        for cell in self.cell_list:
-            cell.animals_update_weight_annual()
+    #    for cell in self.cell_list:
+    #        cell.animals_update_weight_annual()
 
     def migration(self):
         pass
