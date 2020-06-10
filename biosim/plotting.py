@@ -36,19 +36,28 @@ def update(n_steps):
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
     ax.set_xlim(0, n_steps)
-    ax.set_ylim(0, 1)
+    ax.set_ylim(0, 250)
 
     line = ax.plot(np.arange(n_steps),
                    np.full(n_steps, np.nan), 'b-')[0]
 
+    num_animals_every_year = []
     for n in range(n_steps):
+        i.grow_fodder()
+        i.feed_animals()
+        i.procreation()
+        i.death()
+        i.aging()
+        for cell in i.cell_list:
+            num_animals_every_year.append(cell.get_num_animals())
+
         ydata = line.get_ydata()
-        ydata[n] = np.random.random()
+        ydata[n] = num_animals_every_year[n]
         line.set_ydata(ydata)
         plt.pause(1e-6)
 
 
 if __name__ == '__main__':
-    replot(200)
-
+    #replot(200)
+    update(200)
     plt.show()
