@@ -1,4 +1,4 @@
-from biosim.animal import Herbivore
+from biosim.animal import Herbivore, Carnivore
 import numpy as np
 
 
@@ -19,6 +19,7 @@ class Cell:
         self.herbivores_list = []
         self.carnivores_list = []
         self.newborn_herb_list=[]
+        self.newborn_carn_list=[]
         self.available_fodder = 0
 
     def place_animals(self, listof):
@@ -29,6 +30,12 @@ class Cell:
                 animal = Herbivore(age=age, weight=weight)
                 self.herbivores_list.append(animal)
 
+            if dct.get("species") == 'Carnivore':
+                age = dct.get("age")
+                weight = dct.get("weight")
+                animal = Carnivore(age=age, weight=weight)
+                self.carnivores_list.append(animal)
+
 
 
     def animals_die(self):
@@ -38,8 +45,9 @@ class Cell:
         self.herbivores_list = survivors
         # print(self.herbivores_list)
 
-    def animals_eat(self):  # herbivore feeding
-        # I would remove the randomise list function, and just shuffle inplace
+    def animals_eat(self):
+
+        # herbivore feeding
         np.random.shuffle(self.herbivores_list)
         for animal in self.herbivores_list:
             if self.available_fodder >= animal.get_F():
@@ -47,6 +55,20 @@ class Cell:
             elif animal.get_F() > self.available_fodder > 0:
                 animal.eat(self.available_fodder)
                 self.available_fodder = 0
+
+        #Carnivore feeding
+
+        #sort herbivores: Lowest to highest fitness
+        self.herbivores_list.sort(key=lambda x: x.calculate_fitness())
+
+        #sort carnivores: Highest to lowest fitness
+        self.carnivores_list.sort(key=lambda x: x.calculate_fitness(), reverse=True)
+
+        for carnivore in self.carnivores_list:
+            eaten_herbivores = carnivore.eat(self.herbivores_list)
+            herb_survivors = [animal for animal in self.herbivores_list if animal not in eaten_herbivores]
+            self.herbivores_list = herb_survivors
+
 
     def procreation(self):
         """
@@ -62,6 +84,11 @@ class Cell:
             if offspring is not None:
                 self.newborn_herb_list.append(offspring)
 
+        for animal in self.carnivores_list:
+            offspring = animal.create_newborn(len(self.carnivores_list))
+            if offspring is not None:
+                self.newborn_carn_list.append(offspring)
+
         self.add_newborn_to_fauna() #adding newborn to fauna after all animans procreate to not add on iterating list
 
     #Maybe delete this?
@@ -73,12 +100,21 @@ class Cell:
         self.herbivores_list.extend(self.newborn_herb_list)
         self.newborn_herb_list = []
 
+        self.carnivores_list.extend(self.newborn_carn_list)
+        self.newborn_carn_list = []
+
     def animals_age_by_one_year(self):
         for animal in self.herbivores_list:
             animal.grow_older()
 
+        for animal in self.carnivores_list:
+            animal.grow_older()
+
     def animals_update_weight_annual(self):
         for animal in self.herbivores_list:
+            animal.update_weight("decrease")
+
+        for animal in self.carnivores_list:
             animal.update_weight("decrease")
 
     def migrate(self):
@@ -87,9 +123,11 @@ class Cell:
     def get_fodder(self):
         return self.available_fodder
 
-    def get_num_animals(self):
+    def get_num_herb_animals(self):
         return len(self.herbivores_list)
 
+    def get_num_carn_animals(self):
+        return len(self.carnivores_list)
 
 class Water(Cell):
     def __init__(self):
