@@ -181,7 +181,7 @@ class Animal:
     # def get_fitness(self):
     #     return self.fitness
 
-    def get_fodder(self):
+    def get_F(self):
         return self.params['F']
 
     # def get_initial_weight(self):
