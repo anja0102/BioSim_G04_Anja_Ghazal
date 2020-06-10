@@ -74,7 +74,7 @@ Requirements:
     @staticmethod
     def _fitness_formula(age, weight, params):
         q1 = 1 / (1 + math.exp(params['phi_age'] * (age - params['a_half'])))
-        q2 = 1 / (1 + math.exp(-1 * (params['phi_weight'] * (weight - params['a_half']))))
+        q2 = 1 / (1 + math.exp(-1 * (params['phi_weight'] * (weight - params['w_half']))))
         return q1*q2
 
     def calculate_fitness(self):
@@ -118,7 +118,7 @@ Requirements:
             prob = min(1, self.params['gamma'] * self.fitness * (num_animals - 1))
             creating = self.from_prob_to_binary(prob)
             if creating:
-                newborn = Herbivore()  # OBS HOW TO MAKE THE ANIMAL OBJECT OF CORRECT SPECIES
+                newborn = self.__class__()  # OBS HOW TO MAKE THE ANIMAL OBJECT OF CORRECT SPECIES
                 if self.check_mother_minus_newborn_weight_conditions(newborn.weight):
                     return newborn
             else:
@@ -153,7 +153,7 @@ class Herbivore(Animal):
               'beta': 0.9,
               'eta': 0.05,
               'a_half': 40.,
-              'phi_age': 0.2,
+              'phi_age': 0.6,
               'w_half': 10.,
               'phi_weight': 0.1,
               'mu': 0.25,
