@@ -211,9 +211,8 @@ class Carnivore(Animal):
 
         for herbivore in herb_list:
             if self.check_carn_prey(herbivore.calculate_fitness(), self.calculate_fitness()):
-                if sum(herbi.weight for herbi in eaten_herbs) + herbivore.weight <= self.params['F']:
-                    eaten_herbs.append(herbivore)
-                    self.weight += self.params['beta'] * herbivore.weight
+                eaten_herbs.append(herbivore)
+                self.weight += self.params['beta'] * herbivore.weight
 
             if sum(herbi.weight for herbi in eaten_herbs) >= self.params['F']:
                 return eaten_herbs
