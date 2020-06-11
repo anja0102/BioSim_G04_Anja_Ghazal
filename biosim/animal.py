@@ -172,6 +172,10 @@ class Animal:
         # print('prob inside is_dying, fitness', prob, self.calculate_fitness())
         return self.from_prob_to_binary(prob)
 
+    def check_if_migrates(self):
+        prob = self.params['mu']*self.calculate_fitness()
+        return self.from_prob_to_binary(prob)
+
     def get_weight(self):
         return self.weight
     #
@@ -260,16 +264,27 @@ class Carnivore(Animal):
 
     def eat(self, herb_list):
         eaten_herbs = []
+        remaining_appetite = self.params['F']
 
         for herbivore in herb_list:
             if self.check_carn_prey(herbivore.calculate_fitness(), self.calculate_fitness()):
                 eaten_herbs.append(herbivore)
-                self.weight += self.params['beta'] * herbivore.weight
 
-            if sum(herb.weight for herb in eaten_herbs) >= self.params['F']:
+                if remaining_appetite - herbivore.weight >= 0:
+                    weight_to_eat = herbivore.weight
+
+                else:
+                    weight_to_eat = remaining_appetite
+
+                remaining_appetite -= weight_to_eat
+                self.weight += self.params['beta'] * weight_to_eat
+
+            if remaining_appetite == 0:  #if not remaining appetite
                 return eaten_herbs
 
         return eaten_herbs
+
+
 
 # if __name__ == "__main__":
 #     num_animals=2
