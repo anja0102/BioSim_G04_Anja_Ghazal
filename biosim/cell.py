@@ -21,6 +21,13 @@ class Cell:
         self.newborn_herb_list=[]
         self.newborn_carn_list=[]
         self.available_fodder = 0
+        self.migratable_cells =[]
+
+    def migratable_neighbour_cells(self):
+        #current coordinates
+        # list of 4 migratable coordinates
+        pass
+
 
     def place_animals(self, listof):
         for dct in listof:
@@ -35,8 +42,6 @@ class Cell:
                 weight = dct.get("weight")
                 animal = Carnivore(age=age, weight=weight)
                 self.carnivores_list.append(animal)
-
-
 
     def animals_die(self):
         # animal_list_c = self.herbivores_list.copy()
@@ -129,8 +134,13 @@ class Cell:
         for animal in self.carnivores_list:
             animal.update_weight("decrease")
 
-    def migrate(self):
-        pass
+    def migrate(self, adjacent_cells):
+        migration_dct={}
+
+        for i, herb in enumerate(self.herbivores_list):
+            if herb.check_if_migrates():
+                cell_to_migrate = np.random.choice(self.migratable_cells, 1)
+                migration_dct
 
     def get_fodder(self):
         return self.available_fodder
@@ -143,23 +153,28 @@ class Cell:
 
 class Water(Cell):
     def __init__(self):
-        self.animals = []
-        self.available_fodder = 0
+        super().__init__()
 
     def set_fodder(self):
-        self.available_fodder = 0
+        pass
 
+    def place_animals(self, listof):
+        raise ValueError('Cant place animals in Water Cell')
+
+    def animals_eat(self):  #Is this method okay ?
+        pass
 
 class Desert(Cell):
     def __init__(self):
-        self.available_fodder = 0
+        super().__init__()
 
     def set_fodder(self):
-        self.available_fodder = 0
+        pass
 
 
 class Highland(Cell):
     def __init__(self):
+        super().__init__()
         self.available_fodder = 300
 
     def set_fodder(self):
