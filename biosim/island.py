@@ -1,4 +1,6 @@
-from biosim.cell import Cell, Lowland
+from biosim.cell import Cell, Lowland, Highland, Water, Desert
+from biosim.animal import Carnivore, Herbivore
+import numpy as np
 
 
 class Island:
@@ -10,99 +12,112 @@ class Island:
     :return:
     """
 
-    def __init__(self):
-        self.cell_list = []  # list to be populated in biosim class
+    def __init__(self, island_map):
+        self._map = island_map
+        self._island_map = self._string_to_np_array()
+        self._landscape_classes = {'W': Water,
+                                   'L': Lowland,
+                                   'H': Highland,
+                                   'D': Desert}
+        self._animal_classes = {'Carnivore': Carnivore,
+                               'Herbivore': Herbivore}
+        self._cells = self.create_map_of_landscape_objects()
+        rows = self._cells.shape[0]
+        cols = self._cells.shape[1]
+        self.cells_dims = rows, cols
 
-    # def grow_fodder:
-    #    for cell in cell_list:
-    #        cell.set_fodder()
+    def get_cells(self):
+        return self._cells
 
-    def create_new_cell(self):
-        c = Lowland()  #Later replaced by function creating different types of land
-        self.cell_list.append(c)
+    def annual_cycle(self):
+        self.grow_fodder()
+        self.feed_animals()
+        self.procreation()
+        self.death()
+        self.aging()
+        self.migration()
+
+    def _string_to_np_array(self):
+        """
+        Converts string to numpy array with the same diemsions.
+        Returns
+        -------
+        char_map: np.ndarray
+        """
+        map_string_clean = self._map.replace(' ', '')
+        char_map = np.array(
+            [[j for j in i] for i in map_string_clean.splitlines()])
+        return char_map
+
+    def create_map_of_landscape_objects(self):
+        """
+        Builds array of same dimension for elements in geogr_array. Then,
+        iterate through the given character array and build the object of
+        landscapes for each character. Afterwards, save the landscape class and
+        instantiate the object.
+        Returns
+        -------
+        cells_array: np.ndarray of landscape objects
+        """
+        cells_array = np.empty(self._island_map.shape, dtype=object)
+        for i in np.arange(self._island_map.shape[0]):
+            for j in np.arange(self._island_map.shape[1]):
+                cell_letter = self._island_map[i][j]
+                cells_array[i][j] = self._create_cell(cell_letter)
+        return cells_array
+
+    def _create_cell(self, cell_letter):
+        """
+        create cell object based on given string
+        Parameters
+        ----------
+        cell_letter: str
+        Returns
+        -------
+        class of landscape ()
+        """
+        return self._landscape_classes[cell_letter]()
+
+    def place_animals(self, ini_animals):
+        for dict in ini_animals:
+            print(dict)
+            print(type(dict))
+            x, y = dict.get('loc')
+            print("X, ", x, "Y, ", y)
+            self._cells[x, y].place_animals(dict.get('pop'))
 
     def grow_fodder(self):
-        for cell in self.cell_list:
-            cell.set_fodder()
+
+        rows, cols = self.cells_dims
+        for x in range(rows):
+            for y in range(cols):
+                self._cells[x, y].set_fodder()
 
     def feed_animals(self):
-        for cell in self.cell_list:
-            cell.animals_eat()
+
+        rows, cols = self.cells_dims
+        for x in range(rows):
+            for y in range(cols):
+                self._cells[x, y].animals_eat()
 
     def procreation(self):
-        for cell in self.cell_list:
-            cell.procreation()
+        rows, cols = self.cells_dims
+        for x in range(rows):
+            for y in range(cols):
+                self._cells[x, y].procreation()
 
     def aging(self):
-        for cell in self.cell_list:
-            cell.animals_age_by_one_year()
+        rows, cols = self.cells_dims
+        for x in range(rows):
+            for y in range(cols):
+                self._cells[x, y].animals_age_by_one_year()
 
     def death(self):
-        for cell in self.cell_list:
-            cell.animals_die()
+        rows, cols = self.cells_dims
+        for x in range(rows):
+            for y in range(cols):
+                self._cells[x, y].animals_die()
 
     def migration(self):
         pass
 
-
-    # def eating for every cell
-
-
-
-if __name__ == "__main__":
-
-
-    i = Island()
-    i.create_new_cell()
-
-    for cell in i.cell_list:
-        cell.place_animals()
-        cell.place_animals()
-
-    for cell in i.cell_list:
-        print("fodder:", cell.get_fodder())
-        for animal in cell.animal_list:
-            print("weight:", animal.get_weight())
-
-    for _ in range(20):
-        i.feed_animals()
-
-    for cell in i.cell_list:
-        print("fodder:", cell.get_fodder())
-        for animal in cell.animal_list:
-            print("weight after eating:", animal.get_weight())
-
-    for cell in i.cell_list:
-        print("number of animals in cell", cell.get_num_animals())
-
-    i.procreation()
-
-    for cell in i.cell_list:
-        print("number of animals after procreation", cell.get_num_animals())
-
-    for cell in i.cell_list:
-        for animal in cell.animal_list:
-            print("age: ", animal.get_age())
-
-    i.aging()
-
-    for cell in i.cell_list:
-        for animal in cell.animal_list:
-            print("age after aging: ", animal.get_age())
-
-    for cell in i.cell_list:
-        for animal in cell.animal_list:
-            print("weight: ", animal.get_weight())
-
-    i.loose_weight()
-
-    for cell in i.cell_list:
-        for animal in cell.animal_list:
-            print("weight after loosing: ", animal.get_weight())
-
-
-    for cell in i.cell_list:
-        print("number of animals in cell", cell.get_num_animals())
-    i.death()
-    for cell in i.cell_list:
-        print("number of animals after killing", cell.get_num_animals())
