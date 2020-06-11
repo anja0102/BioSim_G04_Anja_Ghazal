@@ -4,48 +4,83 @@ np.random.seed(1)
 
 listof = [{'species': 'Herbivore', 'age': 0, 'weight': 20} for _ in range(10)]
 listof2 = [{'species': 'Carnivore', 'age': 0, 'weight': 20} for _ in range(10)]
-
 listof.extend(listof2)
 
-i = Island()
-i.create_new_cell()
+ini_herbs = [{'loc': (1, 1),
+              'pop': [{'species': 'Herbivore',
+                       'age': 5,
+                       'weight': 20}
+                      for _ in range(10)]},
+             {'loc': (1, 2),
+              'pop': [{'species': 'Herbivore',
+                       'age': 5,
+                       'weight': 20}
+                      for _ in range(10)]}
+             ]
 
-for cell in i.cell_list:
-    cell.place_animals(listof)
+ini_carns = [{'loc': (1, 1),
+              'pop': [{'species': 'Carnivore',
+                       'age': 5,
+                       'weight': 20}
+                      for _ in range(4)]},
+             {'loc': (1, 2),
+              'pop': [{'species': 'Carnivore',
+                       'age': 5,
+                       'weight': 20}
+                      for _ in range(4)]}
+             ]
 
-for cell in i.cell_list:
-    print(  len(cell.carnivores_list))
+geogr = """\
+WWW
+WLW
+WWW"""
+
+geogr2= """\
+WWWW
+WLHW
+WWWW"""
+
+i = Island(geogr2)
+i.place_animals(ini_herbs)
+i.place_animals(ini_carns)
+#i.create_new_cell()
+
+#for cell in i.cell_list:
+#    cell.place_animals(listof)
+
 
 num_years = 50
 
-num_herb_animals_everyyear=[]
-num_carn_animals_everyyear=[]
+num_herb=[]
+num_carn=[]
+
+num_herb2=[]
+num_carn2=[]
 
 fitness_of_one_animal = []
+
 for year in range(num_years):
-    print(year)
-    i.grow_fodder()
-    i.feed_animals()
-    # for cell in i.cell_list:
-    #     # for anim in cell.herbivores_list:
-    #     fitness_of_one_animal.append(cell.herbivores_list[0].calculate_fitness())
+    #print(year)
+    i.annual_cycle()
 
-    i.procreation()
-    # for cell in i.cell_list:
-    #     # for anim in cell.herbivores_list:
-    #     print(cell.herbivores_list[0].calculate_fitness(), end=',')
-    # print('\n')
-    # for cell in i.cell_list:
-    #     print('after proc', len(cell.herbivores_list))
-    i.death()
-    i.aging()
+    cells = i.get_cells()
+    num_herb.append(cells[1, 1].get_num_herb_animals())
+    num_carn.append(cells[1, 1].get_num_carn_animals())
 
-    for cell in i.cell_list:
-        num_herb_animals_everyyear.append(cell.get_num_herb_animals())
-        num_carn_animals_everyyear.append(cell.get_num_carn_animals())
+    num_herb2.append(cells[1, 2].get_num_herb_animals())
+    num_carn2.append(cells[1, 2].get_num_carn_animals())
 
-print(num_herb_animals_everyyear)
-print(num_carn_animals_everyyear)
+
+#print(i._island_map)
+#print(i.get_cells())
+print("herb, ", num_herb)
+print("carn, ", num_carn)
+
+print("herb, ", num_herb2)
+print("carn, ", num_carn2)
+
+
+
 
 
 # import matplotlib.pyplot as plt
