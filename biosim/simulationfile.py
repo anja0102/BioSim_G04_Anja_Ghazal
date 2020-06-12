@@ -73,11 +73,12 @@ for year in range(num_years):
 
 #print(i._island_map)
 #print(i.get_cells())
-print("herb, ", num_herb)
-print("carn, ", num_carn)
+#print("herb, ", num_herb)
+#print("carn, ", num_carn)
 
-print("herb, ", num_herb2)
-print("carn, ", num_carn2)
+#print("herb, ", num_herb2)
+#print("carn, ", num_carn2)
+
 
 
 
