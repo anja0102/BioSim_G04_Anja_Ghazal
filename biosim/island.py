@@ -78,12 +78,33 @@ class Island:
         """
         return self._landscape_classes[cell_letter]()
 
+    def _adj_cells(self, x, y):
+        """
+        Returns the list of 4 adjacent cells.
+        Parameters
+        ----------
+        x: int
+        y: int
+        Returns
+        -------
+        adj_cells_list: list
+            List of 4 adjacent cells
+        """
+        rows, cols = self.cells_dims
+        adj_cells_list = []
+        if x > 0:
+            adj_cells_list.append(self._cells[x - 1, y])
+        if x + 1 < rows:
+            adj_cells_list.append(self._cells[x + 1, y])
+        if y > 0:
+            adj_cells_list.append(self._cells[x, y - 1])
+        if y + 1 < cols:
+            adj_cells_list.append(self._cells[x, y + 1])
+        return adj_cells_list
+
     def place_animals(self, ini_animals):
         for dict in ini_animals:
-            print(dict)
-            print(type(dict))
             x, y = dict.get('loc')
-            print("X, ", x, "Y, ", y)
             self._cells[x, y].place_animals(dict.get('pop'))
 
     def grow_fodder(self):
@@ -119,5 +140,28 @@ class Island:
                 self._cells[x, y].animals_die()
 
     def migration(self):
-        pass
+        rows, cols = self.cells_dims
+        for x in range(rows):
+            for y in range(cols):
+                if not type(self._cells[x, y]).__name__ == "Water":
+                    migration_dct = self._cells[x, y].migrate(self._adj_cells(x, y))
+                    self.move_migrated_animals(migration_dct, x, y)
+
+    def move_migrated_animals(self, migration_dct, x, y):
+        herbi_to_remove=[]
+        carni_to_remove=[]
+
+        for cell in migration_dct.keys():
+            if not type(cell).__name__ == "Water":
+                for animal in migration_dct[cell]:
+
+                    if type(animal).__name__ == "Herbivore":
+                        cell.herbivores_list.append(animal)
+                        herbi_to_remove.append(animal)
+                    else:
+                        cell.carnivores_list.append(animal)
+                        carni_to_remove.append(animal)
+
+        self._cells[x, y].remove_migrated_animals(herbi_to_remove, carni_to_remove)
+
 
