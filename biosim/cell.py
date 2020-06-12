@@ -23,12 +23,6 @@ class Cell:
         self.available_fodder = 0
         self.migratable_cells =[]
 
-    def migratable_neighbour_cells(self):
-        #current coordinates
-        # list of 4 migratable coordinates
-        pass
-
-
     def place_animals(self, listof):
         for dct in listof:
             if dct.get("species") == 'Herbivore':
@@ -53,6 +47,18 @@ class Cell:
         self.carnivores_list = survivors_c
 
         # print(self.herbivores_list)
+
+    def add_arrived_animals(self):
+        #for now doing it in island-class
+        pass
+
+    def remove_migrated_animals(self, herb_list, carn_list):
+
+        survivors_h = [herb for herb in self.herbivores_list if herb not in herb_list]
+        self.herbivores_list = survivors_h
+
+        survivors_c = [carn for carn in self.carnivores_list if carn not in carn_list]
+        self.carnivores_list = survivors_c
 
     def herb_eat(self):
         # herbivore feeding
@@ -134,13 +140,32 @@ class Cell:
         for animal in self.carnivores_list:
             animal.update_weight("decrease")
 
-    def migrate(self, adjacent_cells):
-        migration_dct={}
+    def migrate(self, adj_cells):
+        migration_dct = {}
 
-        for i, herb in enumerate(self.herbivores_list):
-            if herb.check_if_migrates():
-                cell_to_migrate = np.random.choice(self.migratable_cells, 1)
-                migration_dct
+        animal_list = self.herbivores_list + self.carnivores_list
+
+        for animal in animal_list:
+            if animal.check_if_migrates():
+                rand_choice = np.random.choice([0, 1, 2, 3])
+                cell_to_migrate = adj_cells[rand_choice]
+
+                if cell_to_migrate in migration_dct:
+                    migration_dct[cell_to_migrate].append(animal)
+                else:
+                    migration_dct[cell_to_migrate] = [animal]
+
+        return migration_dct
+
+    def append_new_animals(self, list):
+        pass
+
+    def delete_moved_animals(self, list):
+        pass
+
+
+        #remove migrating animals from current cell
+        #add animals to new cell (if not water)
 
     def get_fodder(self):
         return self.available_fodder
@@ -162,6 +187,9 @@ class Water(Cell):
         raise ValueError('Cant place animals in Water Cell')
 
     def animals_eat(self):  #Is this method okay ?
+        pass
+
+    def migrate(self, adj_cells):
         pass
 
 class Desert(Cell):
