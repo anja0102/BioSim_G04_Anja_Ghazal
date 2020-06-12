@@ -34,6 +34,8 @@ class Animal:
             # CHECK VALUE ERROR
             self.weight = weight
 
+        self.has_migrated_this_year = False
+
     # Move this down to herb class, since not used by carnivores
     def eat(self, amount=None):
         """
@@ -62,6 +64,7 @@ class Animal:
         """
         self.age += 1
         self.update_weight("decrease")
+        self.has_migrated_this_year = False
 
     @classmethod
     def initial_weight(cls):
@@ -173,8 +176,18 @@ class Animal:
         return self.from_prob_to_binary(prob)
 
     def check_if_migrates(self):
+        if self.has_migrated_this_year:
+            return False
+
         prob = self.params['mu']*self.calculate_fitness()
-        return self.from_prob_to_binary(prob)
+        will_migrate = self.from_prob_to_binary(prob)
+
+        if will_migrate:
+            self.has_migrated_this_year = True
+            return True
+        else:
+            return False
+
 
     def get_weight(self):
         return self.weight
