@@ -36,6 +36,35 @@ class Animal:
 
         self.has_migrated_this_year = False
 
+
+    @classmethod
+    def set_given_parameters(cls, parameters):
+        """
+        save the user defined parameter value for Carnivore and Herbivore
+        inside the class variables parameters.
+        Parameters
+        ----------
+        params: dict
+        """
+
+        for parameter in parameters:
+            if parameter in cls.params:
+                if parameter == 'eta' and parameters['eta'] > 1:
+                    raise ValueError('Illegal parameter value, eta '
+                                     'can\'t be more than 1')
+                if parameter == 'DeltaPhiMax' and parameters[parameter] <= 0:
+                    raise ValueError('Illegal parameter value, ' +
+                                     str(parameter) + ' can\'t be or negative')
+                if parameters[parameter] < 0:
+                    raise ValueError('Illegal parameter value, ' +
+                                     str(parameter) + ' can\'t be negative')
+                else:
+                    cls.params[parameter] = parameters[parameter]
+            else:
+                raise RuntimeError('Unknown parameter, ' + str(parameter) +
+                                   ' can\'t be set')
+
+
     # Move this down to herb class, since not used by carnivores
     def eat(self, amount=None):
         """
