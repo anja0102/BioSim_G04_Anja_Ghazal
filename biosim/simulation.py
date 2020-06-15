@@ -1,5 +1,6 @@
 from biosim.animal import Carnivore, Herbivore
 from biosim.cell import Highland, Lowland
+from biosim.island import Island
 
 class BioSim:
 
@@ -9,6 +10,8 @@ class BioSim:
 
         self._animal_species = {'Carnivore': Carnivore, 'Herbivore': Herbivore}
         self._landscapes_with_changeable_parameters = {'H': Highland, 'L': Lowland}
+        self._island = Island(island_map)
+        self.add_population(ini_pop)
 
 
     """
@@ -83,6 +86,12 @@ class BioSim:
         :param img_years: years between visualizations saved to files (default: vis_years)
         Image files will be numbered consecutively.
         """
+        if img_years is None:
+            img_years = vis_years
+
+        for year in range(num_years):
+            self._island.annual_cycle()
+            print(self.num_animals_per_species)
 
 
     def add_population(self, population):
@@ -92,6 +101,7 @@ class BioSim:
         Add a population to the island
         :param population: List of dictionaries specifying population
         """
+        self._island.place_animals(population)
 
 
     @property
@@ -108,11 +118,20 @@ class BioSim:
         """Total number of animals on island."""
 
 
+
     @property
     def num_animals_per_species(self):
-
-
-        """Number of animals per species in island, as dictionary."""
+        """
+        Calculates number of animals per species in island, as dictionary.
+        Returns
+        -------
+        num_per_species: dict
+        """
+        num_per_species = {}
+        for species in self._animal_species:
+            print(species)
+            num_per_species[species] = self._island.total_num_animals_per_species(species)
+        return num_per_species
 
 
     def make_movie(self):
