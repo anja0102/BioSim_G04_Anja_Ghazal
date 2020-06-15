@@ -23,7 +23,6 @@ class Cell:
         self.available_fodder = 0
         self.migratable_cells =[]
 
-
     def place_animals(self, listof):
         for dct in listof:
             if dct.get("species") == 'Herbivore':
@@ -170,6 +169,14 @@ class Cell:
 
     def get_fodder(self):
         return self.available_fodder
+
+    def get_num_animals(self, species):
+        if species is Herbivore.__name__:
+            return len(self.herbivores_list)
+        elif species is Carnivore.__name__:
+            return len(self.carnivores_list)
+        else:
+            raise ValueError('get_num_animals: must specify a specie to count')
 
     def get_num_herb_animals(self):
         return len(self.herbivores_list)
