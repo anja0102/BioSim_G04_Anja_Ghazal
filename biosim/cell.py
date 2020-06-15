@@ -23,6 +23,7 @@ class Cell:
         self.available_fodder = 0
         self.migratable_cells =[]
 
+
     def place_animals(self, listof):
         for dct in listof:
             if dct.get("species") == 'Herbivore':
@@ -133,12 +134,12 @@ class Cell:
         for animal in self.carnivores_list:
             animal.grow_older()
 
-    def animals_update_weight_annual(self):
-        for animal in self.herbivores_list:
-            animal.update_weight("decrease")
+    #def animals_update_weight_annual(self):
+    #    for animal in self.herbivores_list:
+    #        animal.update_weight("decrease")
 
-        for animal in self.carnivores_list:
-            animal.update_weight("decrease")
+    #    for animal in self.carnivores_list:
+    #        animal.update_weight("decrease")
 
     def migrate(self, adj_cells):
         migration_dct = {}
@@ -203,19 +204,53 @@ class Desert(Cell):
 class Highland(Cell):
     def __init__(self):
         super().__init__()
-        self.available_fodder = 300
+        self.parameters = {'f_max': 300.0}  #Is the fodder parameter called f_max?
+        self.available_fodder = self.parameters['f_max']
 
     def set_fodder(self):
-        self.available_fodder = 300
+        self.available_fodder = self.parameters['f_max']
+
+    def set_given_parameters(self, given_parameters): #should this method be in baseclass maybe?
+        """
+        Sets the user defined parameters that applies to Savannah, Jungle.
+        Parameters
+        ----------
+        given_parameters: dict
+        """
+
+        for parameter in given_parameters:
+            if parameter in self.parameters:
+                self.parameters[parameter] = given_parameters[parameter]
+            else:
+                raise RuntimeError('Unknown parameter, ' +
+                                   str(parameter) +
+                                   ' can\'t be set')
 
 
 class Lowland(Cell):
     def __init__(self):
         super().__init__()
-        self.available_fodder = 800
+        self.parameters = {'f_max': 800.0}  # Is the fodder parameter called f_max?
+        self.available_fodder = self.parameters['f_max']
 
     def set_fodder(self):
-        self.available_fodder = 800
+        self.available_fodder = self.parameters['f_max']
+
+    def set_given_parameters(self, given_parameters): #should this method be in baseclass maybe?
+        """
+        Sets the user defined parameters that applies to Savannah, Jungle.
+        Parameters
+        ----------
+        given_parameters: dict
+        """
+
+        for parameter in given_parameters:
+            if parameter in self.parameters:
+                self.parameters[parameter] = given_parameters[parameter]
+            else:
+                raise RuntimeError('Unknown parameter, ' +
+                                   str(parameter) +
+                                   ' can\'t be set')
 
 
 #if __name__ == "__main__":

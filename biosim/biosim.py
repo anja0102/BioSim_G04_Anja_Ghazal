@@ -1,10 +1,14 @@
+from biosim.animal import Carnivore, Herbivore
+from biosim.cell import Highland, Lowland
 
 class BioSim:
 
     def __init__(self, island_map, ini_pop, seed,
                  ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_base=None, img_fmt='png'):
+
         self._animal_species = {'Carnivore': Carnivore, 'Herbivore': Herbivore}
+        self._landscapes_with_changeable_parameters = {'H': Highland, 'L': Lowland}
 
 
     """
@@ -32,12 +36,11 @@ class BioSim:
     img_base should contain a path and beginning of a file name.
     """
 
-
     def set_animal_parameters(self, species, params):
 
 
         """
-        Sets parameters for animal species.
+        Sets given parameters for corresponding animal species class.
         Parameters
         ----------
         species: str
@@ -54,7 +57,6 @@ class BioSim:
             raise TypeError(species + ' parameters can\'t be assigned, '
                                       'there is no such data type')
 
-
     def set_landscape_parameters(self, landscape, params):
 
 
@@ -64,6 +66,12 @@ class BioSim:
         :param params: Dict with valid parameter specification for landscape
         """
 
+        if landscape in self._landscapes_with_changeable_parameters:
+            landscape = self._landscapes_with_changeable_parameters[landscape]
+            land = landscape()
+            land.set_given_parameters(params)
+        else:
+            raise TypeError(landscape + 'parameters can not be assigned')
 
     def simulate(self, num_years, vis_years=1, img_years=None):
 
