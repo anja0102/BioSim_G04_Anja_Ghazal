@@ -1,90 +1,71 @@
-from biosim.island import Island
-import numpy as np
-np.random.seed(1)
 
-listof = [{'species': 'Herbivore', 'age': 0, 'weight': 20} for _ in range(10)]
-listof2 = [{'species': 'Carnivore', 'age': 0, 'weight': 20} for _ in range(10)]
-listof.extend(listof2)
+# -*- coding: utf-8 -*-
 
-ini_herbs = [{'loc': (1, 1),
-              'pop': [{'species': 'Herbivore',
-                       'age': 5,
-                       'weight': 20}
-                      for _ in range(10)]},
-             {'loc': (1, 2),
-              'pop': [{'species': 'Herbivore',
-                       'age': 5,
-                       'weight': 20}
-                      for _ in range(10)]}
-             ]
+import textwrap
+import matplotlib.pyplot as plt
 
-ini_carns = [{'loc': (1, 1),
-              'pop': [{'species': 'Carnivore',
-                       'age': 5,
-                       'weight': 20}
-                      for _ in range(4)]},
-             {'loc': (1, 2),
-              'pop': [{'species': 'Carnivore',
-                       'age': 5,
-                       'weight': 20}
-                      for _ in range(4)]}
-             ]
+from biosim.simulation import BioSim
 
-geogr = """\
-WWW
-WLW
-WWW"""
+"""
+Compatibility check for BioSim simulations.
 
-geogr2= """\
-WWWW
-WLHW
-WWWW"""
+This script shall function with biosim packages written for
+the INF200 project June 2020.
+"""
 
-i = Island(geogr2)
-i.place_animals(ini_herbs)
-i.place_animals(ini_carns)
-#i.create_new_cell()
-
-#for cell in i.cell_list:
-#    cell.place_animals(listof)
+__author__ = "Hans Ekkehard Plesser, NMBU"
+__email__ = "hans.ekkehard.plesser@nmbu.no"
 
 
-num_years = 50
+if __name__ == '__main__':
+    plt.ion()
 
-num_herb=[]
-num_carn=[]
+    geogr = """\
+               WWWWWWWWWWWWWWWWWWWWW
+               WWWWWWWWHWWWWLLLLLLLW
+               WHHHHHLLLLWWLLLLLLLWW
+               WHHHHHHHHHWWLLLLLLWWW
+               WHHHHHLLLLLLLLLLLLWWW
+               WHHHHHLLLDDLLLHLLLWWW
+               WHHLLLLLDDDLLLHHHHWWW
+               WWHHHHLLLDDLLLHWWWWWW
+               WHHHLLLLLDDLLLLLLLWWW
+               WHHHHLLLLDDLLLLWWWWWW
+               WWHHHHLLLLLLLLWWWWWWW
+               WWWHHHHLLLLLLLWWWWWWW
+               WWWWWWWWWWWWWWWWWWWWW"""
+    geogr = textwrap.dedent(geogr)
 
-num_herb2=[]
-num_carn2=[]
+    ini_herbs = [{'loc': (10, 10),
+                  'pop': [{'species': 'Herbivore',
+                           'age': 5,
+                           'weight': 20}
+                          for _ in range(150)]}]
+    ini_carns = [{'loc': (10, 10),
+                  'pop': [{'species': 'Carnivore',
+                           'age': 5,
+                           'weight': 20}
+                          for _ in range(40)]}]
 
-fitness_of_one_animal = []
+    sim = BioSim(island_map=geogr, ini_pop=ini_herbs,
+                 seed=123456,
+                 hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05},
+                               'age': {'max': 60.0, 'delta': 2},
+                               'weight': {'max': 60, 'delta': 2}},
+                 )
 
-for year in range(num_years):
-    #print(year)
-    i.annual_cycle()
+    sim.set_animal_parameters('Herbivore', {'zeta': 3.2, 'xi': 1.8})
+    sim.set_animal_parameters('Carnivore', {'a_half': 70, 'phi_age': 0.5,
+                                            'omega': 0.3, 'F': 65,
+                                            'DeltaPhiMax': 9.})
 
-    cells = i.get_cells()
-    num_herb.append(cells[1, 1].get_num_herb_animals())
-    num_carn.append(cells[1, 1].get_num_carn_animals())
+    sim.set_landscape_parameters('L', {'f_max': 700})
 
-    num_herb2.append(cells[1, 2].get_num_herb_animals())
-    num_carn2.append(cells[1, 2].get_num_carn_animals())
+    sim.simulate(num_years=10, vis_years=1, img_years=2000)
 
+    sim.add_population(population=ini_carns)
+    sim.simulate(num_years=10, vis_years=1, img_years=2000)
 
-#print(i._island_map)
-#print(i.get_cells())
-#print("herb, ", num_herb)
-#print("carn, ", num_carn)
+    #plt.savefig('check_sim.pdf')
 
-#print("herb, ", num_herb2)
-#print("carn, ", num_carn2)
-
-
-
-
-
-
-# import matplotlib.pyplot as plt
-# plt.plot( list( range(len(fitness_of_one_animal))), fitness_of_one_animal,'--' )
-# plt.show()
-
+    #input('Press ENTER')
