@@ -1,17 +1,37 @@
 from biosim.animal import Carnivore, Herbivore
 from biosim.cell import Highland, Lowland
 from biosim.island import Island
+import numpy as np
 
 class BioSim:
 
-    def __init__(self, island_map, ini_pop, seed,
-                 ymax_animals=None, cmax_animals=None, hist_specs=None,
-                 img_base=None, img_fmt='png'):
+    def __init__(
+                self,
+                island_map,
+                ini_pop,
+                seed,
+                ymax_animals=None,
+                cmax_animals=None,
+                hist_specs=None,
+                img_base=None,
+                img_fmt="png",
+    ):
 
         self._animal_species = {'Carnivore': Carnivore, 'Herbivore': Herbivore}
         self._landscapes_with_changeable_parameters = {'H': Highland, 'L': Lowland}
         self._island = Island(island_map)
         self.add_population(ini_pop)
+        np.random.seed(seed)
+
+        if ymax_animals is None:  #the y-axis limit should be adjusted automatically.
+            self.ymax_animals = None # or call a function to get max num animals updated?
+        else:
+            self.ymax_animals = ymax_animals
+
+        if cmax_animals is None: #If cmax_animals is None, sensible, fixed default values should be used.
+            self._cmax_animals = {'Herbivore': 5, 'Carnivore': 5}
+        else:
+            self._cmax_animals = cmax_animals
 
 
     """
