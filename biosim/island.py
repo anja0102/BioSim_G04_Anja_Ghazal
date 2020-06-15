@@ -102,6 +102,24 @@ class Island:
             adj_cells_list.append(self._cells[x, y + 1])
         return adj_cells_list
 
+    def total_num_animals_per_species(self, species):
+        """
+        Calculates number of animals per kind for all cells per species.
+        Parameters
+        ----------
+        species: str
+        Returns
+        -------
+        num_animals: dict
+        """
+        num_animals = 0
+        rows, cols = self.cells_dims
+        for x in range(0, rows):
+            for y in range(0, cols):
+                cell = self._cells[x, y]
+                num_animals += cell.get_num_animals(species)
+        return num_animals
+
     def place_animals(self, ini_animals):
         for dict in ini_animals:
             x, y = dict.get('loc')
