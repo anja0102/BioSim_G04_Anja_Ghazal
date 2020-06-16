@@ -170,7 +170,8 @@ class Animal:
 
     def check_mating_weight_conditions(self, num_animals):
         if num_animals >= 2:
-            weight_condition = self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth'])
+            weight_condition = self.params['zeta'] * (self.params['w_birth'] +
+                                                      self.params['sigma_birth'])
             if self.weight > weight_condition:
                 return True
             else:
@@ -338,3 +339,10 @@ class Carnivore(Animal):
 #         h.eat()
 #     # h.if_create_new_born(num_animals)
 #     print(h.check_if_will_create_newborn(num_animals, 10))
+
+
+
+
+# for _ in range(30):
+#     print(animal[1].check_carn_prey(animal[0].calculate_fitness(),animal[1].calculate_fitness()))
+#     print(animal[1].eat(herb_list))
