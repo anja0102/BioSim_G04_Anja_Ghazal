@@ -178,6 +178,19 @@ class Cell:
         else:
             raise ValueError('get_num_animals: must specify a specie to count')
 
+    @property
+    def cell_fauna_count(self):
+        """
+        Calculates the number of fauna by their species and gives animal
+        dictionary of animal with species keys
+        Returns
+        -------
+        dictionary of animal with species keys
+        """
+        herbivore = self.get_num_animals('Herbivore')
+        carnivore = self.get_num_animals('Carnivore')
+        return {'Herbivore': herbivore, 'Carnivore': carnivore}
+
     def get_num_herb_animals(self):
         return len(self.herbivores_list)
 
