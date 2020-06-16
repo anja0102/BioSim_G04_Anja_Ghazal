@@ -40,6 +40,31 @@ class TestAnimal:
                 ks_statistic, p_value = kstest(self.init_weight, 'norm')
                 assert p_value < ALPHA
 
+    def test_herb_eat(self):
+        """
+        To test if the herbivores eat proper amount:
+        If the user inserts the desirable amount, it should eat that amount
+        If not, the herbivore eats amount of F
+        """
+        assert self.animal[0].eat(amount=5) is 5
+        assert self.animal[0].eat() is self.animal[0].params['F']
+
+    def test_carn_eat(self, mocker):
+        """
+        Firstly: To test if the carnivore has the right to eat (first should be able to prey)
+        Secondly: To test for the low weight herbivores it takes longer prey list to fulfill their
+        appetite
+        """
+        mocker.patch('numpy.random.random', return_value=0)  # It will definitely prey
+        assert len(self.animal[1].eat(self.herb_list)) is not 0
+        herb_list_low = []
+        herb_list_high = []
+        for _ in range(20):
+            herb_list_low.append(Herbivore(weight=5))
+            herb_list_high.append(Herbivore(weight=10))
+        carn = Carnivore(weight=20)
+        assert len(carn.eat(herb_list_low)) > len(carn.eat(herb_list_high))
+
     def test_when_carnivore_prey(self):
         """
         To test the condition for carnivores to prey on herbivores:
@@ -105,7 +130,6 @@ class TestAnimal:
             else:
                 assert self.animal[species].check_mating_weight_conditions(num_animals=2) is True
 
-
     def test_mother_weight_decrement(self):
         """
         To test if the mother loses weight after giving birth to the child
@@ -123,8 +147,27 @@ class TestAnimal:
             else:
                 assert after_birth_weight - before_birth_weight < 0
 
+    def test_mother_weight_condition(self, mocker):
+        """
+        To test if the mother gives birth to the child and its weight decreases by a certain
+        amount, the child should not be born and the mother's weight must remain unchanged
+        """
+        animal_low_weight = [Herbivore(weight=0.5), Carnivore(weight=0.5)]
+        # herbivore and carnivore with enough low weight
+        for animal in animal_low_weight:
+            mocker.patch('numpy.random.random', return_value=0)  # To be sure the create_newborn
+            # is None due to the weight of mother not the probability
+            assert animal.create_newborn(2) is None
 
-    def test_death(self):
+    def test_prob_to_die(self, mocker):
+        """
+        To test if the random number is low enough the animal would definitely die
+        """
+        for species in range(2):
+            mocker.patch('numpy.random.random', return_value=0)
+            assert self.animal[species].is_dying() is True
+
+    def test_death(self, mocker):
         """
         Firstly: To test if the animal dies when its weight is less / equal to zero
         Secondly: Since there's a reverse relationship between death and fitness, animals with higher
@@ -161,10 +204,13 @@ class TestAnimal:
 
     def test_migration_annually(self, mocker):
         """
-        To test if the animal migrates once a year
+        Firstly: To test if the probability condition holds the animal migrates
+        Secondly: If the animal grows older, it can migrate again next year (migration happens
+        annually)
         """
         for species in range(2):
             mocker.patch('numpy.random.random', return_value=0)
-            assert self.animal[species].has_migrated_this_year is False
+            assert self.animal[species].check_if_migrates() is True
+            assert self.animal[species].check_if_migrates() is False
             self.animal[species].grow_older()
             assert self.animal[species].has_migrated_this_year is False
