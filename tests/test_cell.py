@@ -30,17 +30,19 @@ class TestCell:
         To test if the carnivores and herbivores are being placed successfully
         """
         self.cell.place_animals(self.ini_herb + self.ini_carn)
-        assert self.cell.get_num_herb_animals() is 30
-        assert self.cell.get_num_carn_animals() is 20
+        assert self.cell.get_num_animals("Herbivore") is 30
+        assert self.cell.get_num_animals("Carnivore") is 20
 
     def test_survivors_after_die(self):
         """
         To test if the animals die, the number of animals decrease in the cell
         """
         self.cell.place_animals(self.ini_herb + self.ini_carn)
-        num_before_dying = self.cell.get_num_herb_animals() + self.cell.get_num_carn_animals()
+        num_before_dying = self.cell.get_num_animals("Herbivore") +\
+                           self.cell.get_num_animals("Carnivore")
         self.cell.animals_die()
-        num_after_dying = self.cell.get_num_herb_animals() + self.cell.get_num_carn_animals()
+        num_after_dying = self.cell.get_num_animals("Herbivore") +\
+                          self.cell.get_num_animals("Carnivore")
         assert num_after_dying <= num_before_dying
 
     def available_fodder(self):
@@ -58,10 +60,10 @@ class TestCell:
         To test if the number of herbivores decrease after carnivores prey them
         """
         self.cell.place_animals(self.ini_herb + self.ini_carn)
-        num_herb_before_prey = self.cell.get_num_herb_animals()
+        num_herb_before_prey = self.cell.get_num_animals("Herbivore")
         mocker.patch('numpy.random.random', return_value=0)  # Carnivores will definitely prey
         self.cell.carn_eat()
-        num_herb_after_prey = self.cell.get_num_herb_animals()
+        num_herb_after_prey = self.cell.get_num_animals("Herbivore")
         assert num_herb_after_prey < num_herb_before_prey
 
     def test_procreation(self, mocker):
