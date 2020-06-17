@@ -25,17 +25,21 @@ class Cell:
 
     def place_animals(self, listof):
         for dct in listof:
-            if dct.get("species") == 'Herbivore':
+            get = dct.get("species")
+            if get == 'Herbivore':
                 age = dct.get("age")
                 weight = dct.get("weight")
                 animal = Herbivore(age=age, weight=weight)
                 self.herbivores_list.append(animal)
 
-            if dct.get("species") == 'Carnivore':
+            elif get == 'Carnivore':
                 age = dct.get("age")
                 weight = dct.get("weight")
                 animal = Carnivore(age=age, weight=weight)
                 self.carnivores_list.append(animal)
+            else:
+                if get is not None:
+                    raise ValueError('Cant place animals rather than herbivore or carnivore')
 
     def animals_die(self):
         # animal_list_c = self.herbivores_list.copy()
@@ -197,6 +201,7 @@ class Cell:
     def get_num_carn_animals(self):
         return len(self.carnivores_list)
 
+
 class Water(Cell):
     def __init__(self):
         super().__init__()
@@ -207,11 +212,12 @@ class Water(Cell):
     def place_animals(self, listof):
         raise ValueError('Cant place animals in Water Cell')
 
-    def animals_eat(self):  #Is this method okay ?
+    def animals_eat(self):
         pass
 
     def migrate(self, adj_cells):
         pass
+
 
 class Desert(Cell):
     def __init__(self):
@@ -232,7 +238,7 @@ class Highland(Cell):
 
     def set_given_parameters(self, given_parameters): #should this method be in baseclass maybe?
         """
-        Sets the user defined parameters that applies to Savannah, Jungle.
+        Sets the user defined parameters.
         Parameters
         ----------
         given_parameters: dict
@@ -271,6 +277,3 @@ class Lowland(Cell):
                 raise RuntimeError('Unknown parameter, ' +
                                    str(parameter) +
                                    ' can\'t be set')
-
-
-#if __name__ == "__main__":
