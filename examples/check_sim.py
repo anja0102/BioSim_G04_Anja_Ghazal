@@ -59,11 +59,11 @@ if __name__ == '__main__':
                                             'DeltaPhiMax': 9.})
     sim.set_landscape_parameters('L', {'f_max': 700})
 
-    sim.simulate(num_years=100, vis_years=1, img_years=2000)
+    sim.simulate(num_years=5, vis_years=1, img_years=1)
 
     sim.add_population(population=ini_carns)
-    sim.simulate(num_years=100, vis_years=1, img_years=2000)
+    sim.simulate(num_years=5, vis_years=1, img_years=1)
 
-    plt.savefig('check_sim.pdf')
+    #plt.savefig('check_sim.pdf')
 
     input('Press ENTER')
