@@ -78,8 +78,15 @@ class Island:
         char_map: np.ndarray
         """
         map_string_clean = self._map.replace(' ', '')
+
+        len_ctr = len(map_string_clean.splitlines()[0])
+        for i in map_string_clean.splitlines():
+            if not len_ctr == len(i):
+                raise ValueError('Inconsistent dimensions in map')
+
         char_map = np.array(
             [[j for j in i] for i in map_string_clean.splitlines()])
+
         return char_map
 
     def create_map_of_landscape_objects(self):
@@ -218,4 +225,10 @@ class Island:
 
         self._cells[x, y].remove_migrated_animals(herbi_to_remove, carni_to_remove)
 
+if __name__ == '__main__':
+
+    geogr = """\
+    WWWWW
+    WHHW
+    WWWWW"""
 
