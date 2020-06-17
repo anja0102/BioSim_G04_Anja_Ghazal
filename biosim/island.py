@@ -145,6 +145,9 @@ class Island:
             adj_cells_list.append(self._cells[x, y + 1])
         return adj_cells_list
 
+    def get_adj_cells(self, x, y):
+        return self._adj_cells(x, y)
+
     def total_num_animals_per_species(self, species):
         """
         Calculates number of animals per kind for all cells per species.
