@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+
+__author__ = "Anja Stene, Student NMBU", "Ghazal Azadi, Student NMBU"
+__email__ = "anja.stene@nmbu.no", "ghazal.azadi@nmbu.no"
+
 import math
 import numpy as np
 
