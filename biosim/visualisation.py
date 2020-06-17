@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+
+__author__ = "Anja Stene, Student NMBU", "Ghazal Azadi, Student NMBU"
+__email__ = "anja.stene@nmbu.no", "ghazal.azadi@nmbu.no"
+
+
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
@@ -5,7 +11,7 @@ import numpy as np
 
 class Visualisation:
     """
-    Visualises the BioSim simulation by making graphs and movie.
+    Visualises the BioSim simulation by making graphs.
     """
     map_colors = {
         "W": mcolors.to_rgba("navy"),
@@ -23,10 +29,11 @@ class Visualisation:
     def __init__(self, map_layout, figure, map_dims):
         """
         The constructor for the Visualisation class.
+
         Parameters
         ----------
         map_layout: str
-        figure: matplotlib figure
+        figure: Matplotlib figure
         map_dims: int
         """
         self._map_layout = map_layout
@@ -45,6 +52,7 @@ class Visualisation:
     def generate_map_array(self):
         """
         Transform the string that parametrises the map into an rgba image.
+
         Returns
         -------
         map_array: array
@@ -73,7 +81,7 @@ class Visualisation:
 
     def visualise_map(self):
         """
-        Creates a map over the island.
+        Creates a map over the island for visualisation
         """
         if self._map_graph is None:
             self._map_graph = self._fig.add_subplot(2, 2, 1)
@@ -90,6 +98,7 @@ class Visualisation:
     def _build_carn_sim_curve(self, final_year):
         """
         Makes 2D simulation curve for carnivores.
+
         Parameters
         ----------
         final_year: int
@@ -110,6 +119,7 @@ class Visualisation:
     def _build_herb_sim_curve(self, final_year):
         """
         Makes 2D simulation curve for herbivores.
+
         Parameters
         ----------
         final_year: int
@@ -131,6 +141,7 @@ class Visualisation:
     def update_graphs(self, year, herb_count, carn_count):
         """
         Updates the graph curves for both herbivores and carnivores.
+
         Parameters
         ----------
         year: int
@@ -148,12 +159,14 @@ class Visualisation:
 
     def animal_graphs(self, final_year, y_lim):
         """
-        Settings up the lines.
+        Settings up the lines for the graphs.
+
         Parameters
         ----------
         final_year: int
         y_lim: int
         """
+
         if self._mean_ax is None:
             self._mean_ax = self._fig.add_subplot(2, 2, 2)
             self._mean_ax.set_ylim(0, y_lim)
