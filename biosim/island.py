@@ -15,12 +15,13 @@ class Island:
     def __init__(self, island_map):
         self._map = island_map
         self._island_map = self._string_to_np_array()
+        self._not_surrounded_by_ocean(self._island_map)
         self._landscape_classes = {'W': Water,
                                    'L': Lowland,
                                    'H': Highland,
                                    'D': Desert}
         self._animal_classes = {'Carnivore': Carnivore,
-                               'Herbivore': Herbivore}
+                                'Herbivore': Herbivore}
         self._cells = self.create_map_of_landscape_objects()
         rows = self._cells.shape[0]
         cols = self._cells.shape[1]
@@ -36,6 +37,38 @@ class Island:
         self.death()
         self.aging()
         self.migration()
+
+    @staticmethod
+    def _edges(map_array):
+        """
+        Gets the border cells from the provided map array.
+
+        Parameters
+        ----------
+        map_array: array
+
+        Returns
+        -------
+        map_edges: list
+        """
+        rows, cols = map_array.shape[0], map_array.shape[1]
+        map_edges = [map_array[0, :cols], map_array[rows - 1, :cols],
+                     map_array[:rows - 1, 0], map_array[:rows - 1, cols - 1]]
+        return map_edges
+
+    def _not_surrounded_by_ocean(self, map_array):
+        """
+        Raise an exception if a border cell in the map is not a Water Cell.
+
+        Parameters
+        ----------
+        map_array: np.ndarray
+        """
+        edges = self._edges(map_array)
+        for side in edges:
+            if not np.all(side == 'W'):
+                raise ValueError('The given geography string is not valid.'
+                                 'The Island must be surrounded by Water')
 
     def _string_to_np_array(self):
         """
