@@ -109,7 +109,10 @@ class Island:
         -------
         class of landscape ()
         """
-        return self._landscape_classes[cell_letter]()
+        if cell_letter in self._landscape_classes:
+            return self._landscape_classes[cell_letter]()
+        else:
+            raise ValueError(cell_letter + " is not a valid landscape type")
 
     def _adj_cells(self, x, y):
         """
