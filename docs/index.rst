@@ -1,17 +1,15 @@
-.. INF200 Project documentation master file, created by
-   sphinx-quickstart on Wed Jun 17 22:31:25 2020.
+.. INF200 project documentation master file, created by
+   sphinx-quickstart on Wed Jun 17 22:55:01 2020.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to INF200 Project's documentation!
+Welcome to INF200 project's documentation!
 ==========================================
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
+   :caption: Contents:
 
-   cell_and_animal
-   sim_and_island
-   visualisation
 
 
 Indices and tables
