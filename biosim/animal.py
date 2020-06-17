@@ -197,7 +197,8 @@ class Animal:
             True or False based on condition checks
         """
         if num_animals >= 2:
-            weight_condition = self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth'])
+            weight_condition = self.params['zeta'] * (self.params['w_birth'] +
+                                                      self.params['sigma_birth'])
             if self.weight > weight_condition:
                 return True
         return False
