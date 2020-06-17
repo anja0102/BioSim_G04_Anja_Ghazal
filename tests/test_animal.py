@@ -32,7 +32,6 @@ class TestAnimal:
     def test_initial_weight_gaussian_dist(self):
         """
         To test if the initial weight of the animals come from a gaussian distribution
-        We assume the error percentage is equal to 5%
         """
         for species in range(2):
             for _ in range(2000):
