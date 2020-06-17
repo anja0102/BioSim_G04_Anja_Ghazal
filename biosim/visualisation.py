@@ -189,6 +189,10 @@ class Visualisation:
             self._carnivore_dist = self._fig.add_subplot(2, 2, 4)
             self._carnivore_img_axis = None
 
+        plt.colorbar(self._herbivore_dist, ax=self._herbivore_img_axis, orientation="vertical")
+
+        plt.colorbar(self._carnivore_dist, ax=self._carnivore_img_axis, orientation="vertical")
+
     def update_herbivore_dist(self, distribution):
         """
         Updates herbivores distribution.
