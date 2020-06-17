@@ -164,9 +164,13 @@ class Island:
         return num_animals
 
     def place_animals(self, ini_animals):
-        for dict in ini_animals:
-            x, y = dict.get('loc')
-            self._cells[x, y].place_animals(dict.get('pop'))
+        for dct in ini_animals:
+
+            if dct.get('loc') is None:
+                raise ValueError('Location of animal to place was not given')
+
+            x, y = dct.get('loc')
+            self._cells[x, y].place_animals(dct.get('pop'))
 
     def grow_fodder(self):
 
