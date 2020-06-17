@@ -5,10 +5,16 @@
 
 Welcome to INF200 Project's documentation!
 ==========================================
+This is a simulation of an imaginary island.
+This island contains herbivores and carnivores.
+
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 3
+
+   cell_and_animal
+   sim_and_island
+   visualisation
 
 
 
