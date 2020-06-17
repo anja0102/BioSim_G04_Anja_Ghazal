@@ -170,6 +170,9 @@ class Island:
                 raise ValueError('Location of animal to place was not given')
 
             x, y = dct.get('loc')
+            # Translating so that upper rightmost corner has coordinates 1,1, and not 0,0
+            x -= 1
+            y -= 1
             self._cells[x, y].place_animals(dct.get('pop'))
 
     def grow_fodder(self):
