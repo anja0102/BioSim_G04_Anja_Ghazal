@@ -12,31 +12,35 @@ _DEFAULT_GRAPHICS_DIR = os.path.join('../results', '')
 _DEFAULT_GRAPHICS_NAME = 'biosim'
 _DEFAULT_MOVIE_FORMAT = 'mp4'
 
+_FFMPEG_BINARY = 'ffmpeg'
+_CONVERT_BINARY = 'magick'
+
+
 
 class BioSim:
 
     def __init__(
                 self,
                 island_map,
-                ini_pop,
                 seed,
+                ini_pop,
                 ymax_animals=None,
                 cmax_animals=None,
-                hist_specs=None,
+                hist_specs=None,  #Remove since we dont plot the histograms?
                 img_base=None,
                 img_fmt="png"
     ):
 
+        np.random.seed(seed)
         self._animal_species = {'Carnivore': Carnivore, 'Herbivore': Herbivore}
         self._landscapes_with_changeable_parameters = {'H': Highland, 'L': Lowland}
         self._island_map = island_map
         self._island = Island(island_map)
+        self.add_population(ini_pop)
         self._vis = None
         self._fig = None
-        self.add_population(ini_pop)
         self._final_year = None
         self._year = 0
-        np.random.seed(seed)
         self.maximum = 0
 
         if ymax_animals is None:  #the y-axis limit should be adjusted automatically.
@@ -137,7 +141,6 @@ class BioSim:
         self._setup_graphics()
 
         while self._year < self._final_year:
-
             if self._year % vis_years == 0:
                 self._update_graphics()
 
@@ -147,8 +150,6 @@ class BioSim:
             self._island.annual_cycle()
             self._year += 1
 
-            print("Year " + str(self._year))
-            print(self.num_animals_per_species)
 
     def _save_to_csv(self):
         pass
@@ -193,29 +194,14 @@ class BioSim:
         self._vis.update_herbivore_dist(dist_matrix_herbivore)
         self._vis.update_carnivore_dist(dist_matrix_carnivore)
         plt.pause(1e-6)
-        self._fig.suptitle('Year: ' + str(self.year), x=0.5)
+        self._fig.suptitle('Year: '    + str(self.year+1), x = 0.5) #shows first year as 1
+
 
     def _update_animals_graph(self):
         herb_count, carn_count = list(self.num_animals_per_species.values())
         self._vis.update_graphs(self._year, herb_count, carn_count)
 
-    def _save_graphics(self):
-        """
-        Saves graphics to file if file name is given.
-        """
-        pass
-        # if self._img_base is None:
-        #     return
-        #
-        # plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
-        #                                              num=self._img_ctr,
-        #                                              type=self._img_fmt))
-        # self._img_ctr += 1
-
-
     def add_population(self, population):
-
-
         """
         Add a population to the island
         :param population: List of dictionaries specifying population
@@ -253,17 +239,8 @@ class BioSim:
         """
         num_per_species = {}
         for species in self._animal_species:
-            print(species)
             num_per_species[species] = self._island.total_num_animals_per_species(species)
         return num_per_species
-
-
-    def make_movie(self):
-        """Create MPEG4 movie from visualization images saved."""
-        pass
-
-
-
 
     @property
     def _animal_distribution(self):
@@ -284,3 +261,19 @@ class BioSim:
                                  'Herbivore': animals_count['Herbivore'],
                                  'Carnivore': animals_count['Carnivore']})
         return pd.DataFrame(count_df)
+
+    def make_movie(self):
+        """Create MPEG4 movie from visualization images saved."""
+        pass
+
+    def _save_graphics(self):
+        """
+        Saves graphics to file if file name is given.
+        """
+        if self._img_base is None:
+            return
+
+        plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
+                                                     num=self._img_ctr,
+                                                     type=self._img_fmt))
+        self._img_ctr += 1
