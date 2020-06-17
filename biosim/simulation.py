@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+
+__author__ = "Anja Stene, Student NMBU", "Ghazal Azadi, Student NMBU"
+__email__ = "anja.stene@nmbu.no", "ghazal.azadi@nmbu.no"
+
+
 from biosim.animal import Carnivore, Herbivore
 from biosim.cell import Highland, Lowland
 from biosim.island import Island
@@ -5,7 +11,6 @@ import numpy as np
 import pandas as pd
 from biosim.visualisation import Visualisation
 import matplotlib.pyplot as plt
-import matplotlib
 import os
 
 _DEFAULT_GRAPHICS_DIR = os.path.join('../results', '')
@@ -16,8 +21,10 @@ _FFMPEG_BINARY = 'ffmpeg'
 _CONVERT_BINARY = 'magick'
 
 
-
 class BioSim:
+    """
+    BioSim Class used interface class for the simulations
+    """
 
     def __init__(
                 self,
@@ -45,11 +52,11 @@ class BioSim:
 
         if ymax_animals is None:  #the y-axis limit should be adjusted automatically.
             # matplotlib.pyplot.autoscale(enable=True, axis='both', tight=None)
-            self.ymax_animals = 20000  # or call a function to get max num animals updated?
+            self.ymax_animals = 17000  # or call a function to get max num animals updated?
         else:
             self.ymax_animals = ymax_animals
 
-        if cmax_animals is None: #If cmax_animals is None, sensible, fixed default values should be used.
+        if cmax_animals is None:
             self._cmax_animals = {'Herbivore': 5, 'Carnivore': 5}
         else:
             self._cmax_animals = cmax_animals
@@ -88,10 +95,9 @@ class BioSim:
     """
 
     def set_animal_parameters(self, species, params):
-
-
         """
         Sets given parameters for corresponding animal species class.
+
         Parameters
         ----------
         species: str
@@ -109,12 +115,13 @@ class BioSim:
                                       'there is no such data type')
 
     def set_landscape_parameters(self, landscape, params):
-
-
         """
         Set parameters for landscape type.
-        :param landscape: String, code letter for landscape
-        :param params: Dict with valid parameter specification for landscape
+
+        Parameters
+        ----------
+        landscape: String, code letter for landscape
+        params: Dict with valid parameter specification for landscape
         """
 
         if landscape in self._landscapes_with_changeable_parameters:
@@ -125,15 +132,18 @@ class BioSim:
             raise TypeError(landscape + 'parameters can not be assigned')
 
     def simulate(self, num_years, vis_years=1, img_years=None):
-
-
         """
         Run simulation while visualizing the result.
-        :param num_years: number of years to simulate
-        :param vis_years: years between visualization updates
-        :param img_years: years between visualizations saved to files (default: vis_years)
-        Image files will be numbered consecutively.
+
+        Parameters
+        ----------
+        num_years: number of years to simulate
+        vis_years: years between visualization updates
+        img_years: years between visualizations saved to files (default: vis_years)
+            Image files will be numbered consecutively.
+
         """
+
         if img_years is None:
             img_years = vis_years
 
@@ -194,7 +204,7 @@ class BioSim:
         self._vis.update_herbivore_dist(dist_matrix_herbivore)
         self._vis.update_carnivore_dist(dist_matrix_carnivore)
         plt.pause(1e-6)
-        self._fig.suptitle('Year: '    + str(self.year+1), x = 0.5) #shows first year as 1
+        self._fig.suptitle('Year: '    + str(self.year+1), x = 0.5) # shows first year as 1
 
 
     def _update_animals_graph(self):
@@ -262,18 +272,25 @@ class BioSim:
                                  'Carnivore': animals_count['Carnivore']})
         return pd.DataFrame(count_df)
 
-    def make_movie(self):
-        """Create MPEG4 movie from visualization images saved."""
-        pass
-
     def _save_graphics(self):
+        pass
         """
         Saves graphics to file if file name is given.
         """
-        if self._img_base is None:
-            return
+        #if self._img_base is None:
+        #    return
 
-        plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
-                                                     num=self._img_ctr,
-                                                     type=self._img_fmt))
-        self._img_ctr += 1
+        #plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
+        #                                             num=self._img_ctr,
+        #                                             type=self._img_fmt))
+        #self._img_ctr += 1
+
+    def make_movie(self, movie_fmt=_DEFAULT_MOVIE_FORMAT):
+        """
+        Creates MPEG4 movie from visualization images saved, requires ffmpeg.
+        The movie is stored as img_base + movie_fmt
+        Parameters
+        ----------
+        movie_fmt: str
+        """
+        pass
