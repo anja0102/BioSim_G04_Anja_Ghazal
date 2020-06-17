@@ -7,10 +7,11 @@ Welcome to INF200 Project's documentation!
 ==========================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    cell_and_animal
    sim_and_island
+   visualisation
 
 
 Indices and tables
