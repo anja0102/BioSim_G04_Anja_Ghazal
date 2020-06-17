@@ -64,9 +64,9 @@ class Cell:
         # herbivore feeding
         np.random.shuffle(self.herbivores_list)
         for animal in self.herbivores_list:
-            if self.available_fodder >= animal.get_F():
+            if self.available_fodder >= animal.get_param_f():
                 self.available_fodder -= animal.eat()
-            elif animal.get_F() > self.available_fodder > 0:
+            elif animal.get_param_f() > self.available_fodder > 0:
                 animal.eat(self.available_fodder)
                 self.available_fodder = 0
 
