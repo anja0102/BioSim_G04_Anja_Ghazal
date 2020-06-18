@@ -48,7 +48,8 @@ class Visualisation:
         self._carnivore_dist = None
         self._herbivore_img_axis = None
         self._carnivore_img_axis = None
-
+        self.colorbar_herb_set = False
+        self.colorbar_carn_set = False
     def generate_map_array(self):
         """
         Transform the string that parametrises the map into an rgba image.
@@ -181,6 +182,7 @@ class Visualisation:
         """
         Plots animal distribution
         """
+
         if self._herbivore_dist is None:
             self._herbivore_dist = self._fig.add_subplot(2, 2, 3)
             self._herbivore_img_axis = None
@@ -188,10 +190,6 @@ class Visualisation:
         if self._carnivore_dist is None:
             self._carnivore_dist = self._fig.add_subplot(2, 2, 4)
             self._carnivore_img_axis = None
-
-        plt.colorbar(self._herbivore_dist, ax=self._herbivore_img_axis, orientation="vertical")
-
-        plt.colorbar(self._carnivore_dist, ax=self._carnivore_img_axis, orientation="vertical")
 
     def update_herbivore_dist(self, distribution):
         """
@@ -206,7 +204,7 @@ class Visualisation:
             self._herbivore_img_axis.set_data(distribution)
         else:
             y, x = self._map_dims
-            self._herbivore_dist.imshow(distribution,
+            self._herbivore_img_axis = self._herbivore_dist.imshow(distribution,
                                         interpolation='nearest',
                                         vmin=v_min, vmax=v_max, cmap='Greens')
             self._herbivore_dist.set_xticks(range(0, x, 5))
@@ -216,6 +214,10 @@ class Visualisation:
             self._herbivore_dist.set_title('Herbivore Distribution')
             self._herbivore_dist.set_xlabel('X')
             self._herbivore_dist.set_ylabel('Y')
+        if self.colorbar_herb_set is False:
+            plt.colorbar(self._herbivore_img_axis,
+                         ax=self._herbivore_img_axis, orientation="vertical")
+            self.colorbar_herb_set = True
 
     def update_carnivore_dist(self, distribution):
         """
@@ -240,4 +242,15 @@ class Visualisation:
             self._carnivore_dist.set_title('Carnivore Distribution')
             self._carnivore_dist.set_xlabel('X')
             self._carnivore_dist.set_ylabel('Y')
+
+        if self.colorbar_carn_set is False:
+            plt.colorbar(mappable= self._carnivore_dist.imshow(distribution,
+                                            interpolation='nearest',
+                                            vmin=v_min, vmax=v_max, cmap='OrRd'),
+                         ax=self._carnivore_img_axis, orientation="vertical")
+            self.colorbar_carn_set = True
+
+
+
+
 
