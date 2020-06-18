@@ -162,9 +162,12 @@ class BioSim:
 
 
     def _save_to_csv(self):
-        pass
-    #     df = self._animal_distribution
-    #     df.to_csv('../results/data.csv', sep='\t', encoding='utf-8')
+        """
+        Saves animal_distribution as CSV file
+
+        """
+         df = self._animal_distribution
+         df.to_csv('../results/data.csv', sep='\t', encoding='utf-8')
 
 
     def y_max(self):
@@ -208,6 +211,10 @@ class BioSim:
 
 
     def _update_animals_graph(self):
+        """
+        Updating the animal graphs by counted number of animals
+
+        """
         herb_count, carn_count = list(self.num_animals_per_species.values())
         self._vis.update_graphs(self._year, herb_count, carn_count)
 
