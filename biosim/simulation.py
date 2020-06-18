@@ -183,7 +183,7 @@ class BioSim:
         map_dims = self._island.cells_dims
 
         if self._fig is None:
-            self._fig = plt.figure()
+            self._fig = plt.figure(figsize=(10,7))
             self._vis = Visualisation(self._island_map, self._fig, map_dims)
 
         self._vis.visualise_map()
