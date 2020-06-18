@@ -214,9 +214,9 @@ class Visualisation:
             self._herbivore_dist.set_title('Herbivore Distribution')
             self._herbivore_dist.set_xlabel('X')
             self._herbivore_dist.set_ylabel('Y')
+            cbaxes = self._fig.add_axes([0.47, 0.12, 0.03, 0.30])
         if self.colorbar_herb_set is False:
-            plt.colorbar(self._herbivore_img_axis,
-                         ax=self._herbivore_img_axis, orientation="vertical")
+            plt.colorbar(self._herbivore_img_axis, cax=cbaxes)
             self.colorbar_herb_set = True
 
     def update_carnivore_dist(self, distribution):
@@ -232,7 +232,7 @@ class Visualisation:
             self._carnivore_img_axis.set_data(distribution)
         else:
             y, x = self._map_dims
-            self._carnivore_dist.imshow(distribution,
+            self._carnivore_img_axis = self._carnivore_dist.imshow(distribution,
                                         interpolation='nearest',
                                         vmin=v_min, vmax=v_max, cmap="OrRd" )
             self._carnivore_dist.set_xticks(range(0, x, 5))
@@ -242,12 +242,10 @@ class Visualisation:
             self._carnivore_dist.set_title('Carnivore Distribution')
             self._carnivore_dist.set_xlabel('X')
             self._carnivore_dist.set_ylabel('Y')
+            cbaxes = self._fig.add_axes([0.96, 0.12, 0.02, 0.30])
 
         if self.colorbar_carn_set is False:
-            plt.colorbar(mappable= self._carnivore_dist.imshow(distribution,
-                                            interpolation='nearest',
-                                            vmin=v_min, vmax=v_max, cmap='OrRd'),
-                         ax=self._carnivore_img_axis, orientation="vertical")
+            plt.colorbar(self._carnivore_img_axis, cax=cbaxes)
             self.colorbar_carn_set = True
 
 
