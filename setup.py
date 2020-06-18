@@ -33,6 +33,7 @@ from distutils.core import setup
 
 import codecs
 import os
+import setuptools
 
 def read_readme():
       here = os.path.abspath(os.path.dirname(__file__))
@@ -50,7 +51,8 @@ setup(
       requires=['numpy (>=1.6.1)',
                 'matplotlib (>=1.1.0)',
                 'pytest'],
-      packages=['biosim', 'examples', 'tests'],
+      #packages=['biosim', 'examples', 'tests'],
+      packages=setuptools.find_packages(),
       url='https://github.com/anja0102/BioSim_G04_Anja_Ghazal',
       scripts=['examples/rv_demo.py', 'examples/rv_demo.py'],
       license='MIT License',
