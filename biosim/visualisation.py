@@ -245,3 +245,8 @@ class Visualisation:
             self._carnivore_dist.set_title('Carnivore Distribution')
             self._carnivore_dist.set_xlabel('X')
             self._carnivore_dist.set_ylabel('Y')
+        if self.colorbar_carn_set is False:
+            plt.colorbar(self._carnivore_dist.imshow(distribution,
+                                        interpolation='nearest',
+                                        vmin=v_min, vmax=v_max, cmap='Greens'), ax=self._carnivore_dist, fraction=0.046)
+            self.colorbar_carn_set = True
