@@ -50,6 +50,7 @@ class Visualisation:
         self._carnivore_img_axis = None
         self.colorbar_herb_set = False
         self.colorbar_carn_set = False
+
     def generate_map_array(self):
         """
         Transform the string that parametrises the map into an rgba image.
@@ -234,7 +235,7 @@ class Visualisation:
             y, x = self._map_dims
             self._carnivore_img_axis = self._carnivore_dist.imshow(distribution,
                                         interpolation='nearest',
-                                        vmin=v_min, vmax=v_max, cmap="OrRd" )
+                                        vmin=v_min, vmax=v_max, cmap="OrRd")
             self._carnivore_dist.set_xticks(range(0, x, 5))
             self._carnivore_dist.set_xticklabels(range(0, x, 5))
             self._carnivore_dist.set_yticks(range(0, y, 5))
@@ -242,13 +243,8 @@ class Visualisation:
             self._carnivore_dist.set_title('Carnivore Distribution')
             self._carnivore_dist.set_xlabel('X')
             self._carnivore_dist.set_ylabel('Y')
-            cbaxes = self._fig.add_axes([0.96, 0.12, 0.02, 0.30])
+            cbaxes = self._fig.add_axes([0.5, 0.12, 0.02, 0.30])
 
         if self.colorbar_carn_set is False:
             plt.colorbar(self._carnivore_img_axis, cax=cbaxes)
             self.colorbar_carn_set = True
-
-
-
-
-

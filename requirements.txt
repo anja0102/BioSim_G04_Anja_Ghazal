@@ -1,3 +1,6 @@
+matplotlib
+pandas
+numpy
 
 alabaster                 0.7.12                     py_0    conda-forge
 appnope                   0.1.0           py37hc8dfbb8_1001    conda-forge

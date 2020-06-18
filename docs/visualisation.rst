@@ -1,7 +1,7 @@
-Animal Documentation
+Visualisation Documentation
 ======================
 
-.. automodule:: biosim.animal
+.. automodule:: biosim.visualisation
    :members:
    :private-members:
    :undoc-members:

@@ -3,7 +3,6 @@
 __author__ = "Anja Stene, Student NMBU", "Ghazal Azadi, Student NMBU"
 __email__ = "anja.stene@nmbu.no", "ghazal.azadi@nmbu.no"
 
-
 from biosim.animal import Carnivore, Herbivore
 from biosim.cell import Highland, Lowland
 from biosim.island import Island
@@ -27,15 +26,15 @@ class BioSim:
     """
 
     def __init__(
-                self,
-                island_map,
-                seed,
-                ini_pop,
-                ymax_animals=None,
-                cmax_animals=None,
-                hist_specs=None,  #Remove since we dont plot the histograms?
-                img_base=None,
-                img_fmt="png"
+            self,
+            island_map,
+            seed,
+            ini_pop,
+            ymax_animals=None,
+            cmax_animals=None,
+            hist_specs=None,  # Remove since we dont plot the histograms?
+            img_base=None,
+            img_fmt="png"
     ):
 
         np.random.seed(seed)
@@ -50,7 +49,7 @@ class BioSim:
         self._year = 0
         self.maximum = 0
 
-        if ymax_animals is None:  #the y-axis limit should be adjusted automatically.
+        if ymax_animals is None:  # the y-axis limit should be adjusted automatically.
             # matplotlib.pyplot.autoscale(enable=True, axis='both', tight=None)
             self.ymax_animals = 17000  # or call a function to get max num animals updated?
         else:
@@ -67,7 +66,6 @@ class BioSim:
             self._img_base = img_base
         self._img_ctr = 0
         self._img_fmt = img_fmt
-
 
     """
     :param island_map: Multi-line string specifying island geography
@@ -160,12 +158,11 @@ class BioSim:
             self._island.annual_cycle()
             self._year += 1
 
-
     def _save_to_csv(self):
         pass
+
     #     df = self._animal_distribution
     #     df.to_csv('../results/data.csv', sep='\t', encoding='utf-8')
-
 
     def y_max(self):
         """
@@ -183,7 +180,7 @@ class BioSim:
         map_dims = self._island.cells_dims
 
         if self._fig is None:
-            self._fig = plt.figure(figsize=(10,7))
+            self._fig = plt.figure(figsize=(10, 7))
             self._vis = Visualisation(self._island_map, self._fig, map_dims)
 
         self._vis.visualise_map()
@@ -204,8 +201,7 @@ class BioSim:
         self._vis.update_herbivore_dist(dist_matrix_herbivore)
         self._vis.update_carnivore_dist(dist_matrix_carnivore)
         plt.pause(1e-6)
-        self._fig.suptitle('Year: '    + str(self.year+1), x = 0.5) # shows first year as 1
-
+        self._fig.suptitle('Year: ' + str(self.year + 1), x=0.5)  # shows first year as 1
 
     def _update_animals_graph(self):
         herb_count, carn_count = list(self.num_animals_per_species.values())
@@ -237,7 +233,6 @@ class BioSim:
         for species in self._animal_species:
             total_num += self._island.total_num_animals_per_species(species)
         return total_num
-
 
     @property
     def num_animals_per_species(self):
@@ -277,13 +272,13 @@ class BioSim:
         """
         Saves graphics to file if file name is given.
         """
-        #if self._img_base is None:
+        # if self._img_base is None:
         #    return
 
-        #plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
+        # plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
         #                                             num=self._img_ctr,
         #                                             type=self._img_fmt))
-        #self._img_ctr += 1
+        # self._img_ctr += 1
 
     def make_movie(self, movie_fmt=_DEFAULT_MOVIE_FORMAT):
         """

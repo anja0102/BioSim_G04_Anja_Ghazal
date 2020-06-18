@@ -1,7 +1,7 @@
-Animal Documentation
+Cell Documentation
 ======================
 
-.. automodule:: biosim.animal
+.. automodule:: biosim.cell
    :members:
    :private-members:
    :undoc-members:

@@ -1,7 +1,7 @@
-Animal Documentation
+Island Documentation
 ======================
 
-.. automodule:: biosim.animal
+.. automodule:: biosim.island
    :members:
    :private-members:
    :undoc-members:
