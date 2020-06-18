@@ -20,7 +20,7 @@ class TestCell:
         """
         To test if we can are allowed to just place herbivores or carnivores
         """
-        ini_rabbit = [{'species': 'Rabbit', 'age': 1,'weight': 0.5}]
+        ini_rabbit = [{'species': 'Rabbit', 'age': 1, 'weight': 0.5}]
 
         with pytest.raises(ValueError):
             self.cell.place_animals(ini_rabbit)
@@ -39,10 +39,10 @@ class TestCell:
         """
         self.cell.place_animals(self.ini_herb + self.ini_carn)
         num_before_dying = self.cell.get_num_animals("Herbivore") +\
-                           self.cell.get_num_animals("Carnivore")
+            self.cell.get_num_animals("Carnivore")
         self.cell.animals_die()
         num_after_dying = self.cell.get_num_animals("Herbivore") +\
-                          self.cell.get_num_animals("Carnivore")
+            self.cell.get_num_animals("Carnivore")
         assert num_after_dying <= num_before_dying
 
     def available_fodder(self):
@@ -93,9 +93,9 @@ class TestCell:
         """
         i = Island("WWWW\nWLHW\nWWWW")
         ini_herb = [{'loc': (0, 1),
-                      'pop': [{'species': 'Herbivore',
-                               'age': 5,
-                               'weight': 20}]}]
+                    'pop': [{'species': 'Herbivore',
+                            'age': 5,
+                            'weight': 20}]}]
         with pytest.raises(ValueError):
             i.place_animals(ini_herb)
 
@@ -117,9 +117,3 @@ class TestCell:
         h = Highland()
         l = Lowland()
         assert h.available_fodder < l.available_fodder
-
-
-
-
-
-

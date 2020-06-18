@@ -32,7 +32,7 @@ class BioSim:
             ini_pop,
             ymax_animals=None,
             cmax_animals=None,
-            hist_specs=None,  # Remove since we dont plot the histograms?
+            hist_specs=None,
             img_base=None,
             img_fmt="png"
     ):
@@ -159,19 +159,19 @@ class BioSim:
             self._year += 1
 
     def _save_to_csv(self):
-<<<<<<< HEAD
+
         pass
 
     #     df = self._animal_distribution
     #     df.to_csv('../results/data.csv', sep='\t', encoding='utf-8')
-=======
+
         """
         Saves animal_distribution as CSV file
 
         """
-         df = self._animal_distribution
-         df.to_csv('../results/data.csv', sep='\t', encoding='utf-8')
->>>>>>> master
+        df = self._animal_distribution
+        df.to_csv('../results/data.csv', sep='\t', encoding='utf-8')
+
 
     def y_max(self):
         """
@@ -189,7 +189,7 @@ class BioSim:
         map_dims = self._island.cells_dims
 
         if self._fig is None:
-            self._fig = plt.figure(figsize=(10, 7))
+            self._fig = plt.figure()
             self._vis = Visualisation(self._island_map, self._fig, map_dims)
 
         self._vis.visualise_map()
@@ -281,17 +281,16 @@ class BioSim:
         return pd.DataFrame(count_df)
 
     def _save_graphics(self):
-        pass
         """
         Saves graphics to file if file name is given.
         """
-        # if self._img_base is None:
-        #    return
+        if self._img_base is None:
+            return
 
-        # plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
-        #                                             num=self._img_ctr,
-        #                                             type=self._img_fmt))
-        # self._img_ctr += 1
+        plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
+                                                    num=self._img_ctr,
+                                                    type=self._img_fmt))
+        self._img_ctr += 1
 
     def make_movie(self, movie_fmt=_DEFAULT_MOVIE_FORMAT):
         """

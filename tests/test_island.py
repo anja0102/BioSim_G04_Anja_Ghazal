@@ -1,5 +1,4 @@
 import pytest
-from biosim.animal import Herbivore, Carnivore
 from biosim.island import Island
 
 
@@ -47,17 +46,9 @@ class TestIsland:
         mocker.patch('numpy.random.random', return_value=0)  # To be assured that migration, death
         # and procreation happen
         num_animals_before_cycle = self.island.total_num_animals_per_species('Herbivore') + \
-                                   self.island.total_num_animals_per_species('Carnivore')
+            self.island.total_num_animals_per_species('Carnivore')
         self.island.annual_cycle()
         num_animals_after_cycle = self.island.total_num_animals_per_species('Herbivore') + \
-                                  self.island.total_num_animals_per_species('Carnivore')
+            self.island.total_num_animals_per_species('Carnivore')
 
         assert num_animals_after_cycle is not num_animals_before_cycle
-
-    def test_adj_cell(self):
-        """
-        To test if the corresponding method recognizes the adjacent cell correctly
-        """
-        pass
-
-
